@@ -21,7 +21,8 @@ fi
 
 if [ ! -d ${HADOOP_CONF_DIR} ]; then 
 mkdir -p ${HADOOP_CONF_DIR}
-cp ${HADOOP_HOME}/conf/* ${HADOOP_CONF_DIR}
+#cp ${HADOOP_HOME}/conf/* ${HADOOP_CONF_DIR}
+cp ${HADOOP_HOME}/share/hadoop/common/templates/conf/* ${HADOOP_CONF_DIR}
 cp ${HADOOP_CONF_DIR}hdfs-site.xml.default ${HADOOP_CONF_DIR}hdfs-site.xml
 fi
 
@@ -33,9 +34,8 @@ sed -e "s|localhost|$jobnode|g" ${HADOOP_CONF_DIR}mapred-site.xml.default | sed 
 sed -e "s|localhost|$namenode|g" ${HADOOP_CONF_DIR}core-site.xml.default | sed -e "s|username|$username|g" > ${HADOOP_CONF_DIR}core-site.xml
 sed -e "s|localhost|$namenode|g" ${HADOOP_CONF_DIR}hdfs-site.xml.default | sed -e "s|username|$username|g" > ${HADOOP_CONF_DIR}hdfs-site.xml
 
-${HADOOP_HOME}/bin/hadoop namenode -format
-${HADOOP_HOME}/bin/start-all.sh
-
-
-
+#${HADOOP_HOME}/bin/hadoop namenode -format
+hadoop namenode -format
+#${HADOOP_HOME}/bin/start-all.sh
+start-all.sh
 

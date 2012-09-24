@@ -1,0 +1,1 @@
+../scoobi/project/GenWireFormat.scala
