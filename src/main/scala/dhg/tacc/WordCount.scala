@@ -7,13 +7,13 @@ object WordCount extends ScoobiApp {
 
     val List(inputFile, outputFile) = args.toList
 
-    val counts = 
+    val counts: DList[(String, Int)] =
       fromTextFile(inputFile)
         .flatMap(_.toLowerCase.split("\\W+"))
         .map(word => (word, 1))
         .groupByKey
         .combine((a: Int, b: Int) => a + b)
-    
+
     persist(toTextFile(counts, outputFile))
 
   }

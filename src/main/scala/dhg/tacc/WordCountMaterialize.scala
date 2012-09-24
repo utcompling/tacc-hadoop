@@ -7,7 +7,7 @@ object WordCountMaterialize extends ScoobiApp {
 
     val List(inputFile) = args.toList
 
-    val counts = 
+    val counts: DList[(String, Int)] = 
       fromTextFile(inputFile)
         .flatMap(_.toLowerCase.split("\\W+"))
         .map(word => (word, 1))
