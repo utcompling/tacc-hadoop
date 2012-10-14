@@ -15,7 +15,34 @@ Add the following to `~/.profile_user` and `job.hadoop.new`:
 
 Run this project:
 
-    ~/tacc-scoobi$ sh bin/sbt "run-main dhg.tacc.WordCount"
+    ~/tacc-scoobi$ sbt "run-main dhg.tacc.WordCount"
+
+
+
+Setting up the cluster
+----------------------
+
+Set up access to helper TACC/Hadoop functions:
+
+    chmod u+x ~/tacc-scoobi/bin/*
+    export PATH="~/tacc-scoobi/bin:$PATH"
+
+Start a cluster:
+
+    start NUM_HOURS NUM_MACHINES    # start a cluster
+    showq                           # show the queue
+    qstat                           # show the queue information
+
+    nn                              # ssh to the namenode
+    check                           # check the cluster
+    pi                              # run the pi test job
+
+Other commands:
+
+    init                            # used to control memory settings
+    vnc_cmd                         # print the command needed to set up a vnc connection
+    fix                             # fix the cluster when it is screwed up
+
 
 On the cluster
 --------------
