@@ -1,6 +1,7 @@
 if [ $# -ne 4 ]
 then
-    echo "Usage: $0 HADOOP_HEAPSIZE (2000) MAP_TASKS (8) REDUCE_TASKS (8) TASK_XMX (3g)"
+    echo "Usage: $0 HADOOP_HEAPSIZE MAP_TASKS REDUCE_TASKS TASK_XMX"
+    echo "Example Usage: $0 2000 8 8 3g"
     exit
 fi
 
@@ -8,17 +9,17 @@ fi
 
 
 
-cat $GH/hadoop-templates/hadoop-env.sh.template \
+cat $TACC_SCOOBI/hadoop-templates/hadoop-env.sh.template \
     | sed 's/HADOOP_HEAPSIZE=2000/HADOOP_HEAPSIZE=1000/' \
     > ~/.hadoop2/conf/hadoop-env.sh
 
 cat ~/.hadoop2/conf/hadoop-env.sh
 
 
-$GH/fix_HDFS.sh
+./fix
 
 
-cat $GH/hadoop-templates/hadoop-env.sh.template \
+cat $TACC_SCOOBI/hadoop-templates/hadoop-env.sh.template \
     | sed 's/HADOOP_HEAPSIZE=2000/HADOOP_HEAPSIZE='$1'/' \
     > ~/.hadoop2/conf/hadoop-env.sh
 
@@ -31,7 +32,7 @@ NAMENODE=\
     | sed 's_ __g' \
     |  sed 's_.*<name>mapred.job.tracker</name><value>\(c[0-9]\{3\}-[0-9]\{3\}\:[0-9]\{4\}\).*</value>.*_\1_'
 
-cat $GH/hadoop-templates/mapred-site.xml.template \
+cat $TACC_SCOOBI/hadoop-templates/mapred-site.xml.template \
     | sed 's/NAMENODE/'$NAMENODE'/' \
     | sed 's/MAP_TASKS_MAX/'$2'/' \
     | sed 's/REDUCE_TASKS_MAX/'$3'/' \

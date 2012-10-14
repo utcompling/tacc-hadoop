@@ -1,22 +1,40 @@
 tacc-scoobi
 ===========
 
-Download Cloudera's Hadoop distribution CDH3 from
+Link to my existing version of Cloudera's Hadoop distribution CDH4:
 
-    http://www.cloudera.com/hadoop/
+    ~$ ln -s /scratch/01899/dhg1/bin/hadoop-2.0.0-cdh4.0.1 hadoop
+    
+Or download your own copy:
 
-Or link to my existing version:
+    ~$ wget http://archive.cloudera.com/cdh4/cdh/4/hadoop-2.0.0-cdh4.0.1.tar.gz
+    ~$ tar zxvf hadoop-2.0.0-cdh4.0.1.tar.gz
+    
+Checkout this project:
 
-    ~$ ln -s /scratch/01899/dhg1/bin/hadoop-0.20.2-cdh3u5 hadoop
+    ~$ git clone git@github.com:dhgarrette/tacc-scoobi.git
+    ~$ chmod u+x tacc-scoobi/sbt
 
-Add the following to `~/.profile_user` and `job.hadoop.new`:
+Checkout the lastest version of scoobi (TODO: fix this to a particular version at some point):
 
+    ~$ git clone https://github.com/NICTA/scoobi.git
+    ~$ cd tacc-scoobi
+    ~$ ln -s ../scoobi scoobi
+
+Add the following to `~/.profile_user`:
+
+    export JAVA_HOME=/share/apps/teragrid/jdk1.6.0_19-64bit/
     export HADOOP_HOME=${HOME}/hadoop
+    export HADOOP_CONF_DIR=${HOME}/.hadoop2/conf/
+    export HADOOP_LOG_DIR=${HOME}/.hadoop2/logs/
+    export HADOOP_SLAVES=${HADOOP_CONF_DIR}/slaves
+    export HADOOP_PID_DIR=/hadoop/pids
+    export TACC_SCOOBI=${HOME}/tacc-scoobi
+    export PATH=$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$TACC_SCOOBI/bin:$PATH
 
 Run this project:
 
-    ~/tacc-scoobi$ sbt "run-main dhg.tacc.WordCount"
-
+    ~/tacc-scoobi$ ./sbt "run-main dhg.tacc.WordCount"
 
 
 Setting up the cluster
@@ -24,8 +42,7 @@ Setting up the cluster
 
 Set up access to helper TACC/Hadoop functions:
 
-    chmod u+x ~/tacc-scoobi/bin/*
-    export PATH="~/tacc-scoobi/bin:$PATH"
+    chmod u+x $TACC_SCOOBI/bin/*
 
 Start a cluster:
 
@@ -47,9 +64,11 @@ Other commands:
 On the cluster
 --------------
 
+    cd $TACC_SCOOBI
+
 Package a jar:
 
-    sbt assembly
+    ./sbt assembly
     
 Make some data:
     

@@ -30,7 +30,7 @@
 #
 #$ -V                             	# Inherit the submission environment
 #$ -cwd                           	# Start job in submission dir
-#$ -N HadoopLargemem	 	        # Job name
+#$ -N HadoopJobLargemem	 	        # Job name
 #$ -j y                           	# Combine stderr and stdout into stdout
 #$ -o $HOME/$JOB_NAME.out      	        # Name of the output file
 #$ -pe 1way 80	                  	# Request 2 vis node

@@ -1,6 +1,7 @@
 if [ $# -ne 2 ]
 then
     echo "Usage: $0 NUM_HOURS NUM_MACHINES"
+    echo "Example Usage: $0 1 3"
     exit
 fi
 
@@ -8,15 +9,13 @@ num_machines=`expr $2 \\* 8`
 
 qstat
 echo "Deleting .hadoop2 logs"
-#rm -rf ~/.hadoop2/logs
+rm -rf ~/.hadoop2/logs
 rm Hadoop*
 echo "Submiting Job.."
-cat $GH/hadoop-templates/job.hadoop.template \
+cat $TACC_SCOOBI/hadoop-templates/job.hadoop.template \
     | sed 's/6:00:00/'$1':00:00/' \
     | sed 's/1way 40/1way '$num_machines'/' \
     > /tmp/job.hadoop.new.temp
 qsub /tmp/job.hadoop.new.temp
 grep '\#\$' /tmp/job.hadoop.new.temp
 #rm /tmp/job.hadoop.new.temp
-#$FOGBOW_DIR/bin/email_when_run.sh &
-
