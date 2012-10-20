@@ -5,7 +5,11 @@ import com.nicta.scoobi.Scoobi._
 object WordCountMaterialize extends ScoobiApp {
   def run() {
 
-    val List(inputFile) = args.toList
+    val inputFile =     
+      args.toList match {
+        case Seq(inputFile) => inputFile
+        case _ => sys.error("WordCount requires one argument: inputFile")
+      }
 
     val counts: DList[(String, Int)] = 
       fromTextFile(inputFile)
