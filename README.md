@@ -121,3 +121,16 @@ With `run` script
 
     ~/tacc-hadoop$ run jar                                                    # jar up the project for use by hadoop on the cluster
     ~/tacc-hadoop$ run cluster dhg.tacc.WordCountMaterialize example.txt      # run a scala script in distributed mode
+
+
+Other useful stuff
+------------------
+
+Scoobi allows you to pass command-line options to change its behavior.  One useful
+option is `inmemory` which will run your job locally through a pipeline backed by
+scala collections.  This is a very fast way to test your job that doesn't require
+you to actually change the code.  It works on any way that you run your job:
+
+    ~/tacc-hadoop$ ./sbt "run-main dhg.tacc.WordCountMaterialize example.txt -- scoobi inmemory"
+    ~/tacc-hadoop$ run local dhg.tacc.WordCountMaterialize example.txt -- scoobi inmemory
+    ~/tacc-hadoop$ run cluster dhg.tacc.WordCountMaterialize example.txt -- scoobi inmemory
