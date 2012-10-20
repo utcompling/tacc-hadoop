@@ -1,3 +1,3 @@
-NN=`cat ~/job1.out | tr '\n' ' ' | sed 's_.*SSH tunnel port \([0-9]\{5\}\).*_\1_'`
+NN=`cat ~/HadoopJob.out | tr '\n' ' ' | sed 's_.*SSH tunnel port \([0-9]\{5\}\).*_\1_'`
 echo "ssh -f -N -L $NN:login1.longhorn.tacc.utexas.edu:$NN h"
 

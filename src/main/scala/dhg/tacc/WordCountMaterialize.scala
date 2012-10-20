@@ -15,7 +15,7 @@ object WordCountMaterialize extends ScoobiApp {
         .combine((a: Int, b: Int) => a + b)
     
     val materialized: Iterable[(String, Int)] = persist(counts.materialize)
-    println(materialized)
+    println(materialized.toList)
 
   }
 }
