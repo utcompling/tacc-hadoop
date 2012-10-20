@@ -61,28 +61,28 @@ Start a cluster:
 
 Other commands:
 
-    init                            # used to control memory settings
     vnc_cmd                         # print the command needed to set up a vnc connection
     fix                             # fix the cluster when it is screwed up
+    init                            # used to control memory settings across the entire cluster
 
 
 On the cluster
 --------------
 
-    cd $TACC_SCOOBI
+    ~$ cd $TACC_SCOOBI
 
 Package a jar:
 
-    ./sbt assembly
+    ~/tacc-scoobi$ ./sbt assembly
     
 Make some data:
     
-    echo "this is a test . this test is short ." > example.txt
-    hadoop fs -put example.txt example.txt
+    ~/tacc-scoobi$ echo "this is a test . this test is short ." > example.txt
+    ~/tacc-scoobi$ hadoop fs -put example.txt example.txt
 
 Run the `materialize` example:
 
-    hadoop jar target/tacc-scoobi-assembly.jar dhg.tacc.WordCountMaterialize example.txt
+    ~/tacc-scoobi$ hadoop jar target/tacc-scoobi-assembly.jar dhg.tacc.WordCountMaterialize example.txt
     
 This will produce
 
@@ -90,15 +90,14 @@ This will produce
 
 Run the file-output example:
 
-    hadoop jar target/tacc-scoobi-assembly.jar dhg.tacc.WordCount example.txt example.wc
-    hadoop fs -getmerge example.wc example.wc
-    cat example.wc
+    ~/tacc-scoobi$ hadoop jar target/tacc-scoobi-assembly.jar dhg.tacc.WordCount example.txt example.wc
+    ~/tacc-scoobi$ hadoop fs -getmerge example.wc example.wc
+    ~/tacc-scoobi$ cat example.wc
 
 This will produce
 
-	a	1
-	is	2
-	short	1
-	test	2
-	this	2
-
+    (a,1)
+    (is,2)
+    (short,1)
+    (test,2)
+    (this,2)
