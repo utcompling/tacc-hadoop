@@ -12,7 +12,7 @@ echo "Deleting .hadoop2 logs"
 rm -rf ~/.hadoop2/logs
 rm Hadoop*
 echo "Submiting Job.."
-cat $TACC_SCOOBI/hadoop-templates/job.hadoop.template \
+cat $TACC_HADOOP/hadoop-templates/job.hadoop.template \
     | sed 's/6:00:00/'$1':00:00/' \
     | sed 's/1way 40/1way '$num_machines'/' \
     > /tmp/job.hadoop.new.temp

@@ -1,4 +1,4 @@
-tacc-scoobi
+tacc-hadoop
 ===========
 
 Link to the existing version of Cloudera's Hadoop distribution CDH3:
@@ -7,15 +7,15 @@ Link to the existing version of Cloudera's Hadoop distribution CDH3:
         
 Checkout this project:
 
-    ~$ git clone git@github.com:dhgarrette/tacc-scoobi.git
-    ~$ chmod u+x tacc-scoobi/sbt
+    ~$ git clone git@github.com:dhgarrette/tacc-hadoop.git
+    ~$ chmod u+x tacc-hadoop/sbt
 
 Clone the lastest version of scoobi and checkout the `chd3` branch. (TODO: fix this to a particular version at some point.)
 
     ~$ git clone https://github.com/NICTA/scoobi.git
-    ~$ cd tacc-scoobi
-    ~$ ln -s ../scoobi scoobi
-    ~/scoobi$ cd scoobi
+    ~$ cd tacc-hadoop
+    ~/tacc-hadoop$ ln -s ../scoobi scoobi
+    ~/tacc-hadoop$ cd ../scoobi
     ~/scoobi$ git checkout cdh3
 
 Add the following to `~/.profile_user`:
@@ -26,15 +26,15 @@ Add the following to `~/.profile_user`:
     export HADOOP_LOG_DIR=${HOME}/.hadoop2/logs/
     export HADOOP_SLAVES=${HADOOP_CONF_DIR}/slaves
     export HADOOP_PID_DIR=/hadoop/pids
-    export TACC_SCOOBI=${HOME}/tacc-scoobi
-    export PATH=$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$TACC_SCOOBI/bin:$PATH
+    export TACC_HADOOP=${HOME}/tacc-hadoop
+    export PATH=$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$TACC_HADOOP/bin:$PATH
 
 Run this project locally:
 
-    ~$ cd ~/tacc-scoobi
-    ~/tacc-scoobi$ echo "this is a test . this test is short ." > example.txt
-    ~/tacc-scoobi$ ./sbt "run-main dhg.tacc.WordCount example.txt example.wc"
-    ~/tacc-scoobi$ cat example.wc/ch0out0-r-00000
+    ~$ cd ~/tacc-hadoop
+    ~/tacc-hadoop$ echo "this is a test . this test is short ." > example.txt
+    ~/tacc-hadoop$ ./sbt "run-main dhg.tacc.WordCount example.txt example.wc"
+    ~/tacc-hadoop$ cat example.wc/ch0out0-r-00000
     (a,1)
     (is,2)
     (short,1)
@@ -47,7 +47,7 @@ Setting up the cluster
 
 Set up access to helper TACC/Hadoop functions:
 
-    chmod u+x $TACC_SCOOBI/bin/*
+    chmod u+x $TACC_HADOOP/bin/*
 
 Start a cluster:
 
@@ -69,20 +69,20 @@ Other commands:
 On the cluster
 --------------
 
-    ~$ cd $TACC_SCOOBI
+    ~$ cd $TACC_HADOOP
 
 Package a jar:
 
-    ~/tacc-scoobi$ ./sbt assembly
+    ~/tacc-hadoop$ ./sbt assembly
     
 Make some data:
     
-    ~/tacc-scoobi$ echo "this is a test . this test is short ." > example.txt
-    ~/tacc-scoobi$ hadoop fs -put example.txt example.txt
+    ~/tacc-hadoop$ echo "this is a test . this test is short ." > example.txt
+    ~/tacc-hadoop$ hadoop fs -put example.txt example.txt
 
 Run the `materialize` example:
 
-    ~/tacc-scoobi$ hadoop jar target/tacc-scoobi-assembly.jar dhg.tacc.WordCountMaterialize example.txt
+    ~/tacc-hadoop$ hadoop jar target/tacc-hadoop-assembly.jar dhg.tacc.WordCountMaterialize example.txt
     
 This will produce
 
@@ -90,9 +90,9 @@ This will produce
 
 Run the file-output example:
 
-    ~/tacc-scoobi$ hadoop jar target/tacc-scoobi-assembly.jar dhg.tacc.WordCount example.txt example.wc
-    ~/tacc-scoobi$ hadoop fs -getmerge example.wc example.wc
-    ~/tacc-scoobi$ cat example.wc
+    ~/tacc-hadoop$ hadoop jar target/tacc-hadoop-assembly.jar dhg.tacc.WordCount example.txt example.wc
+    ~/tacc-hadoop$ hadoop fs -getmerge example.wc example.wc
+    ~/tacc-hadoop$ cat example.wc
 
 This will produce
 
@@ -106,8 +106,8 @@ This will produce
 With `run` script
 -----------------
 
-    ~/tacc-scoobi$ run compile
-    ~/tacc-scoobi$ run local dhg.tacc.WordCountMaterialize example.txt
+    ~/tacc-hadoop$ run compile
+    ~/tacc-hadoop$ run local dhg.tacc.WordCountMaterialize example.txt
 
-    ~/tacc-scoobi$ run jar
-    ~/tacc-scoobi$ run cluster dhg.tacc.WordCountMaterialize example.txt
+    ~/tacc-hadoop$ run jar
+    ~/tacc-hadoop$ run cluster dhg.tacc.WordCountMaterialize example.txt

@@ -5,7 +5,7 @@ assemblySettings
 seq(com.github.retronym.SbtOneJar.oneJarSettings: _*)
 
 
-name := "tacc-scoobi"
+name := "tacc-hadoop"
 
 version := "0.0.1"
 
@@ -23,7 +23,7 @@ libraryDependencies ++= Seq()
 scalacOptions ++= Seq("-deprecation", "-Ydependent-method-types", "-unchecked")
 
 
-jarName in assembly := "tacc-scoobi-assembly.jar"
+jarName in assembly := "tacc-hadoop-assembly.jar"
 
 mainClass in assembly := None
 

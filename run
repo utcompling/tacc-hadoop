@@ -20,7 +20,7 @@ case $CMD in
     $SBT assembly;;
 
   cluster)
-    hadoop jar target/tacc-scoobi-assembly.jar "$@";;
+    hadoop jar target/tacc-hadoop-assembly.jar "$@";;
 
   wordcount)
     ./run cluster dhg.tacc.WordCount "$@";;
