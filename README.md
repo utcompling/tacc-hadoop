@@ -101,3 +101,13 @@ This will produce
     (short,1)
     (test,2)
     (this,2)
+
+
+With `run` script
+-----------------
+
+    ~/tacc-scoobi$ run compile
+    ~/tacc-scoobi$ run local dhg.tacc.WordCountMaterialize example.txt
+
+    ~/tacc-scoobi$ run jar
+    ~/tacc-scoobi$ run cluster dhg.tacc.WordCountMaterialize example.txt
