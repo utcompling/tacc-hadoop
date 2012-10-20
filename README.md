@@ -10,15 +10,7 @@ Checkout this project:
     ~$ git clone git@github.com:dhgarrette/tacc-hadoop.git
     ~$ chmod u+x tacc-hadoop/sbt
 
-Clone the lastest version of scoobi and checkout the `chd3` branch. (TODO: fix this to a particular version at some point.)
-
-    ~$ git clone https://github.com/NICTA/scoobi.git
-    ~$ cd tacc-hadoop
-    ~/tacc-hadoop$ ln -s ../scoobi scoobi
-    ~/tacc-hadoop$ cd ../scoobi
-    ~/scoobi$ git checkout cdh3
-
-Add the following to `~/.profile_user`:
+Add the following to `~/.profile_user` (and run them on the command line):
 
     export JAVA_HOME=/share/apps/teragrid/jdk1.6.0_19-64bit/
     export HADOOP_HOME=${HOME}/hadoop
@@ -29,17 +21,13 @@ Add the following to `~/.profile_user`:
     export TACC_HADOOP=${HOME}/tacc-hadoop
     export PATH=$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$TACC_HADOOP/bin:$PATH
 
-Run this project locally:
+Clone the lastest version of scoobi and checkout the `chd3` branch. (TODO: fix this to a particular version at some point.)
 
-    ~$ cd ~/tacc-hadoop
-    ~/tacc-hadoop$ echo "this is a test . this test is short ." > example.txt
-    ~/tacc-hadoop$ ./sbt "run-main dhg.tacc.WordCount example.txt example.wc"
-    ~/tacc-hadoop$ cat example.wc/ch0out0-r-00000
-    (a,1)
-    (is,2)
-    (short,1)
-    (test,2)
-    (this,2)
+    ~$ git clone https://github.com/NICTA/scoobi.git
+    ~$ cd tacc-hadoop
+    ~/tacc-hadoop$ ln -s ../scoobi scoobi
+    ~/tacc-hadoop$ cd ../scoobi
+    ~/scoobi$ git checkout cdh3
 
 
 Setting up the cluster
@@ -64,6 +52,23 @@ Other commands:
     vnc_cmd                         # print the command needed to set up a vnc connection
     fix                             # fix the cluster when it is screwed up
     init                            # used to control memory settings across the entire cluster
+
+
+Running a hadoop job locally
+----------------------------
+
+Run this project locally:
+
+    ~$ cd $TACC_HADOOP
+    ~/tacc-hadoop$ echo "this is a test . this test is short ." > example.txt
+    ~/tacc-hadoop$ rm -rf example.wc
+    ~/tacc-hadoop$ ./sbt "run-main dhg.tacc.WordCount example.txt example.wc"
+    ~/tacc-hadoop$ cat example.wc/ch0out0-r-00000
+    (a,1)
+    (is,2)
+    (short,1)
+    (test,2)
+    (this,2)
 
 
 On the cluster
@@ -91,6 +96,7 @@ This will produce
 Run the file-output example:
 
     ~/tacc-hadoop$ hadoop jar target/tacc-hadoop-assembly.jar dhg.tacc.WordCount example.txt example.wc
+    ~/tacc-hadoop$ rm -rf example.wc
     ~/tacc-hadoop$ hadoop fs -getmerge example.wc example.wc
     ~/tacc-hadoop$ cat example.wc
 
