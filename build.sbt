@@ -2,6 +2,9 @@ import AssemblyKeys._
 
 assemblySettings
 
+seq(com.github.retronym.SbtOneJar.oneJarSettings: _*)
+
+
 name := "tacc-scoobi"
 
 version := "0.0.1"
@@ -35,3 +38,8 @@ mergeStrategy in assembly <<= (mergeStrategy in assembly) { (old) =>
     }
   }
 }
+
+
+mainClass in oneJar := None
+
+
