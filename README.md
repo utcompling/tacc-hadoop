@@ -1,5 +1,12 @@
-tacc-hadoop
+Tacc-Hadoop
 ===========
+
+This project exists for two purposes.  First, it is a repository of useful tools for working with TACC.  
+And second, it is template for building a project using hadoop and the scala-based hadoop-wrapper scoobi.
+
+
+Setting up the environment
+--------------------------
 
 Link to the existing version of Cloudera's Hadoop distribution CDH3:
 
@@ -9,6 +16,7 @@ Checkout this project:
 
     ~$ git clone git@github.com:dhgarrette/tacc-hadoop.git
     ~$ chmod u+x tacc-hadoop/sbt
+    ~$ chmod u+x tacc-hadoop/bin/*
 
 Add the following to `~/.profile_user` (and run them on the command line):
 
@@ -30,22 +38,18 @@ Clone the lastest version of scoobi and checkout the `chd3` branch. (TODO: fix t
     ~/scoobi$ git checkout cdh3
 
 
-Setting up the cluster
-----------------------
-
-Set up access to helper TACC/Hadoop functions:
-
-    chmod u+x $TACC_HADOOP/bin/*
+Starting a cluster
+------------------
 
 Start a cluster:
 
-    start NUM_HOURS NUM_MACHINES    # start a cluster
-    showq                           # show the queue
-    qstat                           # show the queue information
+    $ start NUM_HOURS NUM_MACHINES    # start a cluster
+    $ showq                           # show the queue
+    $ qstat                           # show the queue information
 
-    nn                              # ssh to the namenode
-    check                           # check the cluster
-    pi                              # run the pi test job
+    $ nn                              # ssh to the namenode
+    $ check                           # check the cluster
+    $ pi                              # run the pi test job
 
 Other commands:
 
@@ -71,8 +75,8 @@ Run this project locally:
     (this,2)
 
 
-On the cluster
---------------
+Running a hadoop job on the cluster
+-----------------------------------
 
     ~$ cd $TACC_HADOOP
 
@@ -112,8 +116,8 @@ This will produce
 With `run` script
 -----------------
 
-    ~/tacc-hadoop$ run compile
-    ~/tacc-hadoop$ run local dhg.tacc.WordCountMaterialize example.txt
+    ~/tacc-hadoop$ run compile                                                # compile code for local use
+    ~/tacc-hadoop$ run local dhg.tacc.WordCountMaterialize example.txt        # run a scala script locally
 
-    ~/tacc-hadoop$ run jar
-    ~/tacc-hadoop$ run cluster dhg.tacc.WordCountMaterialize example.txt
+    ~/tacc-hadoop$ run jar                                                    # jar up the project for use by hadoop on the cluster
+    ~/tacc-hadoop$ run cluster dhg.tacc.WordCountMaterialize example.txt      # run a scala script in distributed mode
