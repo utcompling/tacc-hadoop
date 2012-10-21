@@ -58,6 +58,23 @@ Other commands:
     init                            # used to control memory settings across the entire cluster
 
 
+Troubleshooting for the first time you use Hadoop on TACC
+---------------------------------------------------------
+
+When you run "check", you may get an error like:
+ 
+$ check
+[Fatal Error] core-site.xml:1:1: Premature end of file.
+<more error output>
+
+If this happens, follow the instructions on this page:
+
+  https://sites.google.com/site/tacchadoop/home/-fatal-error-core-site-xml-1-1-premature-end-of-file
+
+
+If you request just one machine, you won't be able to run Hadoop jobs. (Though this is of course still useful for running jobs that just require a single machine.)
+
+
 Running a hadoop job locally
 ----------------------------
 
