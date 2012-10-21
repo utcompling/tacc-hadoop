@@ -7,6 +7,8 @@ fi
 
 num_machines=`expr $2 \\* 8`
 
+HADOOP_TMP_FILE=/tmp/job.hadoop.new.$USER.temp
+
 qstat
 echo "Deleting .hadoop2 logs"
 rm -rf ~/.hadoop2/logs
@@ -15,7 +17,7 @@ echo "Submiting Job.."
 cat $TACC_HADOOP/hadoop-templates/job.hadoop.template \
     | sed 's/6:00:00/'$1':00:00/' \
     | sed 's/1way 40/1way '$num_machines'/' \
-    > /tmp/job.hadoop.new.temp
-qsub /tmp/job.hadoop.new.temp
-grep '\#\$' /tmp/job.hadoop.new.temp
+    > $HADOOP_TMP_FILE
+qsub $HADOOP_TMP_FILE
+grep '\#\$' $HADOOP_TMP_FILE
 #rm /tmp/job.hadoop.new.temp
