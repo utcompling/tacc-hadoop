@@ -37,6 +37,7 @@ cat $TACC_HADOOP/hadoop-templates/mapred-site.xml.template \
     | sed 's/MAP_TASKS_MAX/'$2'/' \
     | sed 's/REDUCE_TASKS_MAX/'$3'/' \
     | sed 's/TASK_XMX/'$4'/' \
+    | sed 's/USER/'$USER'/' \
     > ~/.hadoop2/conf/mapred-site.xml
 
 cat ~/.hadoop2/conf/mapred-site.xml

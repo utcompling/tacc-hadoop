@@ -19,11 +19,11 @@
   </property>
   <property>
      <name>mapred.local.dir</name>
-     <value>/hadoop/dhg1/local</value>
+     <value>/hadoop/USER/local</value>
   </property>
   <property>
      <name>mapred.system.dir</name>
-     <value>/hadoop/dhg1/system</value>
+     <value>/hadoop/USER/system</value>
   </property>
   <property>
     <name>mapred.child.java.opts</name>

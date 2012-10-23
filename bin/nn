@@ -1,3 +1,8 @@
 NN=$(qstat | tr '\n' ' ' | sed 's_.*hadoop@\(c[0-9]\{3\}-[0-9]\{3\}\)\.longhorn.*_\1_')
-ssh $NN
+
+if [[ -n "$NN" ]] ; then
+    ssh $NN
+else
+    echo "No currently-running clusters.  Please check the cluster status with qstat or showq."
+fi
 
