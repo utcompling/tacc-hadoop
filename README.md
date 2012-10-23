@@ -8,13 +8,31 @@ And second, it is template for building a project using hadoop and the scala-bas
 Setting up the environment
 --------------------------
 
+Put Git on your path:
+
+    ~$ module load git
+
 Link to the existing version of Cloudera's Hadoop distribution CDH3:
 
     ~$ ln -s /scratch/01813/roller/software/lib/hadoop/hadoop-0.20.2-cdh3u2/ hadoop
-        
-Checkout this project:
 
-    ~$ git clone git@github.com:dhgarrette/tacc-hadoop.git
+Download the following file onto your computer: (TODO: `wget` isn't working for me for this file)
+
+    https://sites.google.com/site/tacchadoop/home/-fatal-error-core-site-xml-1-1-premature-end-of-file/hadoop2conf.tar.gz
+
+Upload the file from your computer to your tacc account and extract it:
+
+    <your computer>$ scp <filepath>/hadoop2conf.tar.gz <username>@longhorn.tacc.utexas.edu:.hadoop2
+
+Extract the hadoop configuration.  (Create a `.hadoop2` directory if it does not already exist).
+
+    ~$ mkdir .hadoop2
+    ~$ cd .hadoop2
+    ~$ tar zxvf hadoop2conf.tar.gz
+
+Clone this project:
+
+    ~$ git clone https://github.com/dhgarrette/tacc-hadoop.git
     ~$ chmod u+x tacc-hadoop/sbt
     ~$ chmod u+x tacc-hadoop/bin/*
 
@@ -27,7 +45,7 @@ Add the following to `~/.profile_user` (and run them on the command line):
     export HADOOP_SLAVES=${HADOOP_CONF_DIR}/slaves
     export HADOOP_PID_DIR=/hadoop/pids
     export TACC_HADOOP=${HOME}/tacc-hadoop
-    export PATH=$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$TACC_HADOOP/bin:$PATH
+    export PATH=$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$JAVA_HOME/bin:$TACC_HADOOP/bin:$PATH
 
 Clone the lastest version of scoobi and checkout the `chd3` branch. (TODO: fix this to a particular version at some point.)
 
@@ -36,6 +54,10 @@ Clone the lastest version of scoobi and checkout the `chd3` branch. (TODO: fix t
     ~/tacc-hadoop$ ln -s ../scoobi scoobi
     ~/tacc-hadoop$ cd ../scoobi
     ~/scoobi$ git checkout cdh3
+
+If you haven't done it before, then you will also have to run the command `vncpasswd` before you can schedule jobs.
+
+    ~$ vncpasswd
 
 
 Starting a cluster
@@ -61,18 +83,19 @@ Other commands:
 Troubleshooting for the first time you use Hadoop on TACC
 ---------------------------------------------------------
 
-When you run "check", you may get an error like:
+1. When you run "check", you may get an error like:
  
-$ check
-[Fatal Error] core-site.xml:1:1: Premature end of file.
-<more error output>
+        $ check
+        [Fatal Error] core-site.xml:1:1: Premature end of file.
+        <more error output>
 
-If this happens, follow the instructions on this page:
+  If this happens, follow the instructions on this page:
 
-  https://sites.google.com/site/tacchadoop/home/-fatal-error-core-site-xml-1-1-premature-end-of-file
+    https://sites.google.com/site/tacchadoop/home/-fatal-error-core-site-xml-1-1-premature-end-of-file
 
 
-If you request just one machine, you won't be able to run Hadoop jobs. (Though this is of course still useful for running jobs that just require a single machine.)
+2. If you request just one machine, you won't be able to run Hadoop jobs. (Though this is of course 
+still useful for running jobs that just require a single machine.)
 
 
 Running a hadoop job locally
