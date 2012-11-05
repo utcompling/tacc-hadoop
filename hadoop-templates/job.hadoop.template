@@ -37,7 +37,7 @@
 #$ -q hadoop                         	# Queue name
 #$ -P data
 #$ -l h_rt=6:00:00                	# runtime (hh:mm:ss) - 4 hours
-#$ -A TeXIT
+#$ -A $TACC_PROJECT_NAME
 
 #--------------------------------------------------------------------------
 # ---- You normally should not need to edit anything below this point -----
