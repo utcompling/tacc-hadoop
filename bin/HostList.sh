@@ -14,8 +14,5 @@ for l in `cat $pe_hostfile`; do
     h=`echo $l| sed -e 's/^\([ci][0-9]\+-[0-9]\+.longhorn.tacc.utexas.edu\) \+\([0-9]\+\).*/\1/g' | sort -n`
     N=`expr $N + 1`
     h=$(echo $h | awk 'BEGIN{FS="."}{ print $1}')
-    echo "$h" 
+    echo "$h"
 done
-
-unset IFS
-

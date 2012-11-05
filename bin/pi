@@ -1,2 +1,0 @@
-hadoop jar $HADOOP_HOME/hadoop-*examples*.jar pi 10 1000
-

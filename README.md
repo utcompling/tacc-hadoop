@@ -1,77 +1,43 @@
-Tacc-Hadoop
-===========
+# Tacc-Hadoop
 
-This project exists for two purposes.  First, it is a repository of useful tools for working with TACC.  
+This project exists for two purposes.  First, it is a repository of useful tools for working with TACC.
 And second, it is template for building a project using hadoop and the scala-based hadoop-wrapper scoobi.
 
+## Setting up the environment
 
-Setting up the environment
---------------------------
+On your local machine, add a shortcut to the longhorn login node, which will be named `tacc`. `dig a longhorn.tacc.utexas.edu` will show you the IP address.
 
-Put Git on your path:
+    echo '129.114.50.211 tacc' >> /etc/hosts
+    ssh tacc
+    # if you're local username and your TACC username differ:
+    # ssh whoamiontacc@tacc
 
-    ~$ module load git
+Get this repository:
 
-Link to the existing version of Cloudera's Hadoop distribution CDH3:
+    module load git
+    git clone --recursive https://github.com/chbrown/tacc-hadoop.git
+    echo '. ~/tacc-hadoop/hadoop-conf/hadoop-env.sh' >> ~/.bashrc
 
-    ~$ ln -s /scratch/01813/roller/software/lib/hadoop/hadoop-0.20.2-cdh3u2/ hadoop
+Now log out and back in, or simply `source ~/tacc-hadoop/hadoop-conf/hadoop-env.sh`.
 
-Download the following file onto your computer: (TODO: `wget` isn't working for me for this file)
+Other useful modules: `module load python/2.7.1-epd`
 
-    https://sites.google.com/site/tacchadoop/home/-fatal-error-core-site-xml-1-1-premature-end-of-file/hadoop2conf.tar.gz
-
-Upload the file from your computer to your tacc account and extract it:
-
-    <your computer>$ scp <filepath>/hadoop2conf.tar.gz <username>@longhorn.tacc.utexas.edu:.hadoop2
-
-Extract the hadoop configuration.  (Create a `.hadoop2` directory if it does not already exist).
-
-    ~$ mkdir .hadoop2
-    ~$ cd .hadoop2
-    ~$ tar zxvf hadoop2conf.tar.gz
-
-Clone this project:
-
-    ~$ git clone https://github.com/dhgarrette/tacc-hadoop.git
-    ~$ chmod u+x tacc-hadoop/sbt
-    ~$ chmod u+x tacc-hadoop/bin/*
-
-Add the following to `~/.profile_user` (and run them on the command line):
-
-    export JAVA_HOME=/share/apps/teragrid/jdk1.6.0_19-64bit/
-    export HADOOP_HOME=${HOME}/hadoop
-    export HADOOP_CONF_DIR=${HOME}/.hadoop2/conf/
-    export HADOOP_LOG_DIR=${HOME}/.hadoop2/logs/
-    export HADOOP_SLAVES=${HADOOP_CONF_DIR}/slaves
-    export HADOOP_PID_DIR=/hadoop/pids
-    export TACC_HADOOP=${HOME}/tacc-hadoop
-    export PATH=$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$JAVA_HOME/bin:$TACC_HADOOP/bin:$PATH
-
-Clone the lastest version of scoobi and checkout the `chd3` branch. (TODO: fix this to a particular version at some point.)
-
-    ~$ git clone https://github.com/NICTA/scoobi.git
-    ~$ cd tacc-hadoop
-    ~/tacc-hadoop$ ln -s ../scoobi scoobi
-    ~/tacc-hadoop$ cd ../scoobi
-    ~/scoobi$ git checkout cdh3
-
-If you haven't done it before, then you will also have to run the command `vncpasswd` before you can schedule jobs.
-
-    ~$ vncpasswd
-
-
-Starting a cluster
-------------------
+## Cluster commands
 
 Start a cluster:
 
-    $ start NUM_HOURS NUM_MACHINES    # start a cluster
-    $ showq                           # show the queue
-    $ qstat                           # show the queue information
+    start 10 5   # reserve a 5-machine cluster for 10 hours
+    showq        # show the queue
+    qstat        # show the queue information
+    nn           # ssh to the namenode
 
-    $ nn                              # ssh to the namenode
-    $ check                           # check the cluster
-    $ pi                              # run the pi test job
+    # run the pi test job
+    hadoop jar $HADOOP_HOME/hadoop-*examples*.jar pi 10 1000
+
+    # check the cluster
+    hadoop dfsadmin -report
+
+If you request just one machine, you won't be able to run Hadoop jobs. (Though this is of course still useful for running jobs that just require a single machine.)
 
 Other commands:
 
@@ -79,27 +45,23 @@ Other commands:
     fix                             # fix the cluster when it is screwed up
     init                            # used to control memory settings across the entire cluster
 
+## Troubleshooting
 
-Troubleshooting for the first time you use Hadoop on TACC
----------------------------------------------------------
+### .Xauthority
 
-1. When you run "check", you may get an error like:
- 
-        $ check
-        [Fatal Error] core-site.xml:1:1: Premature end of file.
-        <more error output>
+If you get errors like the following in your HadoopJob.out
 
-  If this happens, follow the instructions on this page:
+    Warning: untrusted X11 forwarding setup failed: xauth key data not generated
+    c201-116: Warning: No xauth data; using fake authentication data for X11 forwarding.
+    c201-116: /usr/bin/xauth:  error in locking authority file /home/01613/chbrown/.Xauthority
 
-    https://sites.google.com/site/tacchadoop/home/-fatal-error-core-site-xml-1-1-premature-end-of-file
+Simply `rm ~/.Xauthority`
 
+### VNC
 
-2. If you request just one machine, you won't be able to run Hadoop jobs. (Though this is of course 
-still useful for running jobs that just require a single machine.)
+For the Mac, Chicken is a free VNC client. Here's a link to the latest installer from Sourceforge, relinked to a github repository: [Chicken-2.2b2.dmg](https://github.com/downloads/chbrown/chicken/Chicken-2.2b2.dmg).
 
-
-Running a hadoop job locally
-----------------------------
+## Running a hadoop job locally
 
 Run this project locally:
 
@@ -123,16 +85,16 @@ Running a hadoop job on the cluster
 Package a jar:
 
     ~/tacc-hadoop$ ./sbt assembly
-    
+
 Make some data:
-    
+
     ~/tacc-hadoop$ echo "this is a test . this test is short ." > example.txt
     ~/tacc-hadoop$ hadoop fs -put example.txt example.txt
 
 Run the `materialize` example:
 
     ~/tacc-hadoop$ hadoop jar target/tacc-hadoop-assembly.jar dhg.tacc.WordCountMaterialize example.txt
-    
+
 This will produce
 
     List((a,1), (is,2), (short,1), (test,2), (this,2))
@@ -174,3 +136,11 @@ you to actually change the code.  It works on any way that you run your job:
     ~/tacc-hadoop$ ./sbt "run-main dhg.tacc.WordCountMaterialize example.txt -- scoobi inmemory"
     ~/tacc-hadoop$ run local dhg.tacc.WordCountMaterialize example.txt -- scoobi inmemory
     ~/tacc-hadoop$ run cluster dhg.tacc.WordCountMaterialize example.txt -- scoobi inmemory
+
+
+If you haven't used Longhorn/TACC before, you'll need to set up a VNC password, even if you aren't going to use VNC. Passwords are truncated to 8 characters.
+
+    vncpasswd
+
+
+# /home/01683/benwing/qsub

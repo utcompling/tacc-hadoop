@@ -1,0 +1,21 @@
+# Warn the user when their session is about to close
+
+# see if the user set their own runtime
+TACC_RUNTIME=`qstat -j $JOB_ID | grep h_rt | perl -ne 'print $1 if /h_rt=(\d+)/'`  # qstat returns seconds
+if [ x"$TACC_RUNTIME" == "x" ]; then
+  TACC_LIMITS=/share/sge6.2/default/tacc/sge_job_filter_control
+  TACC_Q_RUNTIME=`grep vis $TACC_LIMITS | grep max_time_per_job | cut -d' ' -f4`
+  if [ x"$TACC_Q_RUNTIME" != "x" ]; then
+    # pnav: this assumes format hh:dd:ss and converts to seconds
+    #       if days are specified, this won't work
+    TACC_RUNTIME=$TACC_Q_RUNTIME
+  fi
+fi
+if [ x"$TACC_RUNTIME" != "x" ]; then
+  # there's a runtime limit, so warn the user when the session will die
+  # give 5 minute warning for runtimes > 5 minutes
+  if [ $TACC_RUNTIME -gt 300 ]; then
+    TACC_RUNTIME=`expr $TACC_RUNTIME - 300`
+    sleep $TACC_RUNTIME && echo "$USER's VNC session on $VNC_DISPLAY will end in 5 minutes.  Please save your work now." | wall &
+  fi
+fi

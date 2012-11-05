@@ -5,10 +5,6 @@ then
     exit
 fi
 
-
-
-
-
 cat $TACC_HADOOP/hadoop-templates/hadoop-env.sh.template \
     | sed 's/HADOOP_HEAPSIZE=2000/HADOOP_HEAPSIZE=1000/' \
     > ~/.hadoop2/conf/hadoop-env.sh

@@ -1,41 +1,17 @@
 #!/bin/bash
 
 stop-all.sh
-export HADOOP_CONF_DIR=${HOME}/.hadoop2/conf/
-#the following will delete everthing user created in /hadoop /tmp during the job. 
-username=`whoami`
-for line in `cat ${HADOOP_CONF_DIR}/slaves`;
-do
-echo $line
-ssh -Y $line "rm -rf /hadoop/$username"
+
+for slavehost in `cat $HADOOP_CONF_DIR/slaves`; do
+  echo "ssh $slavehost 'rm -rf /hadoop/$USER'"
+  ssh -Y $slavehost "rm -rf /hadoop/$USER"
 done
-rm -rf /hadoop/$username
+rm -rf /hadoop/$USER
 
+cd $HADOOP_CONF_DIR
+sed -e "s|NAMENODE|$NAMENODE|g" mapred-site.xml.default | sed -e "s|USER|$USER|g" > mapred-site.xml
+sed -e "s|NAMENODE|$NAMENODE|g" core-site.xml.default | sed -e "s|USER|$USER|g" > core-site.xml
+sed -e "s|NAMENODE|$NAMENODE|g" hdfs-site.xml.default | sed -e "s|USER|$USER|g" > hdfs-site.xml
 
-export HADOOP_CONF_DIR=${HOME}/.hadoop2/conf/
-export HADOOP_HOME=${HOME}/hadoop
-
-if [ ! -d ${HOME}/.hadoop2 ]; then 
-mkdir -p ${HOME}/.hadoop2
-fi
-
-if [ ! -d ${HADOOP_CONF_DIR} ]; then 
-mkdir -p ${HADOOP_CONF_DIR}
-#cp ${HADOOP_HOME}/conf/* ${HADOOP_CONF_DIR}
-cp ${HADOOP_HOME}/share/hadoop/common/templates/conf/* ${HADOOP_CONF_DIR}
-cp ${HADOOP_CONF_DIR}hdfs-site.xml.default ${HADOOP_CONF_DIR}hdfs-site.xml
-fi
-
-
-namenode=`hostname -a`
-jobnode=$namenode
-username=`whoami`
-sed -e "s|localhost|$jobnode|g" ${HADOOP_CONF_DIR}mapred-site.xml.default | sed -e "s|username|$username|g" > ${HADOOP_CONF_DIR}mapred-site.xml
-sed -e "s|localhost|$namenode|g" ${HADOOP_CONF_DIR}core-site.xml.default | sed -e "s|username|$username|g" > ${HADOOP_CONF_DIR}core-site.xml
-sed -e "s|localhost|$namenode|g" ${HADOOP_CONF_DIR}hdfs-site.xml.default | sed -e "s|username|$username|g" > ${HADOOP_CONF_DIR}hdfs-site.xml
-
-#${HADOOP_HOME}/bin/hadoop namenode -format
-hadoop namenode -format
-#${HADOOP_HOME}/bin/start-all.sh
-start-all.sh
-
+$HADOOP_HOME/bin/hadoop namenode -format
+$HADOOP_HOME/bin/start-all.sh

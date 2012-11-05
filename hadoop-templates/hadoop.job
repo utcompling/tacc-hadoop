@@ -1,0 +1,37 @@
+#!/bin/bash
+#
+# To submit this job, issue: "qsub [this-file-path]"
+#
+# http://services.tacc.utexas.edu/index.php/longhorn-user-guide
+#-----------------------------------------------------------------------------
+#
+#$ -V                               # Inherit the submission environment
+#$ -cwd                             # Start job in submission dir
+#$ -N $JOB_NAME                     # Job name
+#$ -j y                             # Combine stderr and stdout into stdout
+#$ -o $HOME/$JOB_NAME.out           # Name of the output file
+#$ -pe 1way $CORES                  # Request CORES/8 machines
+#$ -q hadoop                        # Submit to the "hadoop" queue (largemem is another queue)
+#$ -P data                          # ?
+#$ -l h_rt=$HOURS:00:00                  # runtime (hh:mm:ss) - 4 hours
+#$ -A $TACC_PROJECT_NAME            # set in profile_user.sh from /share/sge6.2/default/acct/map/ files
+
+. ~/tacc-hadoop/hadoop-conf/hadoop-env.sh
+
+echo "Executing $JOB_NAME ($JOB_ID) at: `date`"
+export NAMENODE=`hostname -s`
+echo "Hostname of namenode: $NODE_HOSTNAME"
+
+# set memory limits to 95% of total memory to prevent node death
+NODE_MEMORY=`free -k | grep ^Mem: | awk '{ print $2; }'`
+NODE_MEMORY_LIMIT=`echo "0.95 * $NODE_MEMORY / 1" | bc`
+ulimit -v $NODE_MEMORY_LIMIT -m $NODE_MEMORY_LIMIT
+echo "memory limit set to $NODE_MEMORY_LIMIT kilobytes"
+
+# set wayness, used for ibrun
+WAYNESS=`echo $PE | perl -pe 's/([0-9]+)way/\1/;'`
+echo "set wayness to $WAYNESS"
+
+start-cluster.sh
+
+echo "Finished executing $JOB_NAME ($JOB_ID) at: `date`"

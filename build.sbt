@@ -6,7 +6,7 @@ seq(com.github.retronym.SbtOneJar.oneJarSettings: _*)
 
 name := "tacc-hadoop"
 
-version := "0.0.1"
+version := "0.0.2"
 
 scalaVersion := "2.9.2"
 

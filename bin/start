@@ -1,23 +1,17 @@
-if [ $# -ne 2 ]
-then
-    echo "Usage: $0 NUM_HOURS NUM_MACHINES"
-    echo "Example Usage: $0 1 3"
-    exit
+#!/bin/bash
+
+HOURS=$1
+MACHINES=$2
+JOB_NAME=${3-'HadoopJob'}      # Defaults to "HadoopJob"
+
+CORES=`expr $MACHINES \\* 8`   # 8 cores per machine
+
+if [[ $HOURS ]] && [[ $CORES ]]; then
+  echo "rm -rf $HADOOP_LOG_DIR"
+  rm -rf $HADOOP_LOG_DIR
+
+  qsub $TACC_HADOOP/hadoop-templates/hadoop.job
+else
+  echo "Usage: $0 NUM_HOURS NUM_MACHINES JOB_NAME"
+  echo "Example Usage: $0 1 3 HadoopWordCount"
 fi
-
-num_machines=`expr $2 \\* 8`
-
-HADOOP_TMP_FILE=/tmp/job.hadoop.new.$USER.temp
-
-qstat
-echo "Deleting .hadoop2 logs"
-rm -rf ~/.hadoop2/logs
-rm Hadoop*
-echo "Submiting Job.."
-cat $TACC_HADOOP/hadoop-templates/job.hadoop.template \
-    | sed 's/6:00:00/'$1':00:00/' \
-    | sed 's/1way 40/1way '$num_machines'/' \
-    > $HADOOP_TMP_FILE
-qsub $HADOOP_TMP_FILE
-grep '\#\$' $HADOOP_TMP_FILE
-#rm /tmp/job.hadoop.new.temp
