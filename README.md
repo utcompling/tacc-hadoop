@@ -8,6 +8,10 @@ And second, it is template for building a project using hadoop and the scala-bas
 Setting up the environment
 --------------------------
 
+Change your default shell to bash (if it's not bash already):
+
+    ~$ chsh -s /bin/bash
+
 Put Git on your path:
 
     ~$ module load git
