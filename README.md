@@ -54,6 +54,11 @@ Add the following to `~/.profile_user` (and run them on the command line):
     export TACC_HADOOP=${HOME}/tacc-hadoop
     export PATH=$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$JAVA_HOME/bin:$TACC_HADOOP/bin:$PATH
 
+Also add an environment variable for your project name.  For example, if you are part of
+the TeXIT project, then you would add the following to `~/.profile_user`:
+
+    export TACC_PROJECT_NAME=TeXIT
+
 Clone the lastest version of scoobi and checkout the `chd3` branch. (TODO: fix this to a particular version at some point.)
 
     ~$ git clone https://github.com/NICTA/scoobi.git
