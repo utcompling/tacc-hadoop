@@ -16,11 +16,9 @@ Link to the existing version of Cloudera's Hadoop distribution CDH3:
 
     ~$ ln -s /scratch/01813/roller/software/lib/hadoop/hadoop-0.20.2-cdh3u2/ hadoop
 
-Extract the hadoop configuration.  (Create a `.hadoop2` directory if it does not already exist).
+Make the `.hadoop2` directory:
 
     ~$ mkdir .hadoop2
-    ~$ cd .hadoop2
-    ~$ tar zxvf hadoop2conf.tar.gz
 
 Download the following file onto your computer: (TODO: `wget` isn't working for me for this file)
 
@@ -29,6 +27,11 @@ Download the following file onto your computer: (TODO: `wget` isn't working for 
 Upload the file from your computer to your tacc account and extract it:
 
     <your computer>$ scp <filepath>/hadoop2conf.tar.gz <username>@longhorn.tacc.utexas.edu:.hadoop2
+
+Extract the hadoop configuration.  (Create a `.hadoop2` directory if it does not already exist).
+
+    ~$ cd .hadoop2
+    ~$ tar zxvf hadoop2conf.tar.gz
 
 Clone this project:
 
