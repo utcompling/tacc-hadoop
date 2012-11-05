@@ -7,14 +7,14 @@
 #
 #$ -V                               # Inherit the submission environment
 #$ -cwd                             # Start job in submission dir
-#$ -N $JOB_NAME                     # Job name
+#$ -N JOBNAME                       # Job name
 #$ -j y                             # Combine stderr and stdout into stdout
 #$ -o $HOME/$JOB_NAME.out           # Name of the output file
-#$ -pe 1way $CORES                  # Request CORES/8 machines
+#$ -pe 1way CORES                   # Request (cores)/8 machines
 #$ -q hadoop                        # Submit to the "hadoop" queue (largemem is another queue)
 #$ -P data                          # ?
-#$ -l h_rt=$HOURS:00:00                  # runtime (hh:mm:ss) - 4 hours
-#$ -A $TACC_PROJECT_NAME            # set in profile_user.sh from /share/sge6.2/default/acct/map/ files
+#$ -l h_rt=HOURS:00:00              # runtime (hh:mm:ss) - 4 hours
+#$ -A TACC_PROJECT_NAME             # set in profile_user.sh from /share/sge6.2/default/acct/map/ files
 
 . ~/tacc-hadoop/hadoop-conf/hadoop-env.sh
 

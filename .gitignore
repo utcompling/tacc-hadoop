@@ -1,6 +1,9 @@
 *.class
 *.log
 
+# template instantiations:
+hadoop-templates/hadoop.job
+
 # sbt specific
 dist/*
 target/

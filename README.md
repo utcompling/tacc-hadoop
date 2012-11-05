@@ -9,7 +9,7 @@ On your local machine, add a shortcut to the longhorn login node, which will be 
 
     echo '129.114.50.211 tacc' >> /etc/hosts
     ssh tacc
-    # if you're local username and your TACC username differ:
+    # if your local username and your TACC username differ:
     # ssh whoamiontacc@tacc
 
 Get this repository:
