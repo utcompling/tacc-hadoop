@@ -32,7 +32,9 @@ echo "memory limit set to $NODE_MEMORY_LIMIT kilobytes"
 WAYNESS=`echo $PE | perl -pe 's/([0-9]+)way/\1/;'`
 echo "set wayness to $WAYNESS"
 
-ln -s $PE_HOSTFILE /tmp/pe_hostfile
+# $PE_HOSTFILE is a special env variable only available in this script, which is something like:
+#   /share/sge/execd_spool//i182-401/active_jobs/743637.1/pe_hostfile
+ln -sf $PE_HOSTFILE /tmp/pe_hostfile
 
 start-cluster.sh
 
@@ -46,7 +48,7 @@ function prowl () {
 }
 prowl "Ready with $JOB_NAME (`date`)"
 
-cat # block indefinitely
+sleep `expr HOURS \\* 3600 - 60` # sleep for the duration, minus a minute to cool off
 
 stop-cluster.sh
 

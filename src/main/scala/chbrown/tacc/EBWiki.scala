@@ -10,7 +10,7 @@ import org.apache.hadoop.io.{Writable, IntWritable}
 //  cycle through the 40607 lines in titles-1911.txt, and find the closest wikipedia article for each
 //  pull over the article text, and well as the title
 
-object WikipediaTitles extends ScoobiApp {
+object EBWiki extends ScoobiApp {
   def run() {
     // args is a global, a Vector or something
     // val (inputFile, outputFile) = args.toList match {

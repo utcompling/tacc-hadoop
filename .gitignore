@@ -2,7 +2,14 @@
 *.log
 
 # template instantiations:
-hadoop-templates/hadoop.job
+jobs/hadoop
+hadoop-conf/core-site.xml
+hadoop-conf/hdfs-site.xml
+hadoop-conf/mapred-site.xml
+hadoop-conf/masters
+hadoop-conf/slaves
+
+hadoop-logs/
 
 # sbt specific
 dist/*
