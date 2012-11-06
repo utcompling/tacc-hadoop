@@ -42,7 +42,11 @@ If you request just one machine, you won't be able to run Hadoop jobs. (Though t
 Other commands:
 
     vnc_cmd                         # print the command needed to set up a vnc connection
-    fix                             # fix the cluster when it is screwed up
+
+    # fix the cluster when it is screwed up
+    stop-cluster.sh
+    start-cluster.sh
+
     init                            # used to control memory settings across the entire cluster
 
 ## Troubleshooting

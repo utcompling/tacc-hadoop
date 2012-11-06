@@ -46,9 +46,8 @@ function prowl () {
 }
 prowl "Ready with $JOB_NAME (`date`)"
 
-# fixme
-sleep 3570 # 30s short of 1h
-echo "Sleeping 3570 seconds"
+cat # block indefinitely
+
 stop-cluster.sh
 
 echo "Finished executing $JOB_NAME ($JOB_ID) at: `date`"
