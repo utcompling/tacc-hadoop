@@ -2,10 +2,10 @@
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 
 <configuration>
-<configuration>
-  <property>
-    <name>fs.default.name</name>
-    <value>hdfs://NAMENODE:9000</value>
-  </property>
-</configuration>
+  <configuration>
+    <property>
+      <name>fs.default.name</name>
+      <value>hdfs://NAMENODE:9000</value>
+    </property>
+  </configuration>
 </configuration>

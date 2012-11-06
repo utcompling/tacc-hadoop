@@ -22,7 +22,7 @@ cat $HADOOP_CONF_DIR/hdfs-site.xml.template | sed \
   -e "s/USER/$USER/g" > $HADOOP_CONF_DIR/hdfs-site.xml
 
 # render hadoop-env.sh
-HADOOP_HEAPSIZE=2000
+HADOOP_HEAPSIZE=6000
 perl -pi -e "s/HADOOP_HEAPSIZE=\d+/HADOOP_HEAPSIZE=$HADOOP_HEAPSIZE/" $HADOOP_CONF_DIR/hadoop-env.sh
 
 # set masters

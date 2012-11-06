@@ -9,8 +9,8 @@ import org.apache.hadoop.io.{Writable, IntWritable}
 object EBWiki extends ScoobiApp {
   def run() {
 
-    // val enwiki_selection = persist(fromTextFile("enwiki-12k.tsv").materialize).toList
-    // val enwiki_selection_titles: List[String] = enwiki_selection.map(_.split("\t")(0))
+    val enwiki_selection = persist(fromTextFile("enwiki-12k.tsv").materialize).toList
+    val enwiki_selection_titles: List[String] = enwiki_selection.map(_.split("\t")(0))
     // val eb_selection = persist(fromTextFile("eb-all.tsv").materialize).toList
     // each file looks like:
     // lowercasetitle TAB Full title (hopefully no tabs) TAB article text (only normal whitespace)
@@ -20,8 +20,7 @@ object EBWiki extends ScoobiApp {
 
     var eb_selection_dlist = fromTextFile("eb-all.tsv").filter { case line =>
       val title = line.split("\t")(0)
-      // enwiki_selection_titles.contains(title)
-      true
+      enwiki_selection_titles.contains(title)
     }
 
     persist(toTextFile(eb_selection_dlist, "eb-12k-maybe.tsv"))

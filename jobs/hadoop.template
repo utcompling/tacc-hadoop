@@ -16,7 +16,7 @@
 #$ -l h_rt=HOURS:00:00              # runtime (hh:mm:ss)
 #$ -A TACC_PROJECT_NAME             # set in profile_user.sh from /share/sge6.2/default/acct/map/ files
 
-. ~/tacc-hadoop/hadoop-conf/hadoop-env.sh
+. $HOME/tacc-hadoop/hadoop-conf/hadoop-env.sh
 
 echo "Executing $JOB_NAME ($JOB_ID) at: `date`"
 export NAMENODE=`hostname -s`

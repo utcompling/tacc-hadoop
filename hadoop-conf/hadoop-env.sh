@@ -2,19 +2,19 @@ export JAVA_HOME=/share/apps/teragrid/jdk1.6.0_19-64bit
 export TACC_HADOOP=$HOME/tacc-hadoop
 export HADOOP_HOME=$TACC_HADOOP/hadoop
 export HADOOP_CONF_DIR=$TACC_HADOOP/hadoop-conf
-export HADOOP_LOG_DIR=$TACC_HADOOP/hadoop-logs
+export HADOOP_LOG_DIR=$SCRATCH/logs
 export HADOOP_SLAVES=$HADOOP_CONF_DIR/slaves
 export HADOOP_PID_DIR=/hadoop/$USER/pids
+export HADOOP_TMP_DIR=/hadoop/$USER/tmp
+export TMP=/hadoop/$USER/tmp
 # export HADOOP_CLASSPATH=
 # The maximum amount of heap to use, in MB. Default is 1000.
-# export HADOOP_HEAPSIZE=2000
-export HADOOP_HEAPSIZE=2000
+export HADOOP_HEAPSIZE=6000
 export HADOOP_NAMENODE_OPTS="-XX:+UseParallelGC -Dcom.sun.management.jmxremote $HADOOP_NAMENODE_OPTS"
 export HADOOP_SECONDARYNAMENODE_OPTS="-Dcom.sun.management.jmxremote $HADOOP_SECONDARYNAMENODE_OPTS"
 export HADOOP_DATANODE_OPTS="-Dcom.sun.management.jmxremote $HADOOP_DATANODE_OPTS"
 export HADOOP_BALANCER_OPTS="-Dcom.sun.management.jmxremote $HADOOP_BALANCER_OPTS"
 export HADOOP_JOBTRACKER_OPTS="-Dcom.sun.management.jmxremote $HADOOP_JOBTRACKER_OPTS"
-export TMP=/hadoop/tmp/
 # tacc-hadoop/bin MUST come before $HADOOP_HOME/bin !
 export PATH=$TACC_HADOOP/bin:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$JAVA_HOME/bin:$PATH
 
