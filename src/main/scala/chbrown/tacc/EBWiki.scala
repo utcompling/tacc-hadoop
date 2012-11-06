@@ -6,35 +6,39 @@ import edu.umd.cloud9.collection.wikipedia._
 import org.apache.hadoop.io.SequenceFile.{Reader => SequenceFileReader}
 import org.apache.hadoop.io.{Writable, IntWritable}
 
-// Objective:
-//  cycle through the 40607 lines in titles-1911.txt, and find the closest wikipedia article for each
-//  pull over the article text, and well as the title
-
 object EBWiki extends ScoobiApp {
   def run() {
-    // args is a global, a Vector or something
-    // val (inputFile, outputFile) = args.toList match {
-    //   case Seq(inputFile, outputFile) => (inputFile, outputFile)
-    //   case _ => sys.error("WordCount requires two arguments: inputFile outputFile")
-    // }
 
-    val eb1911Titles = persist(fromTextFile("titles-1911.txt").materialize)
-      .map(_.replaceAll("\\W+", "").toLowerCase).toList
+    // val enwiki_selection = persist(fromTextFile("enwiki-12k.tsv").materialize).toList
+    // val enwiki_selection_titles: List[String] = enwiki_selection.map(_.split("\t")(0))
+    // val eb_selection = persist(fromTextFile("eb-all.tsv").materialize).toList
+    // each file looks like:
+    // lowercasetitle TAB Full title (hopefully no tabs) TAB article text (only normal whitespace)
+
+    // goal:
+    //   find the articles in eb that are also in enwiki (should = 12902)
+
+    var eb_selection_dlist = fromTextFile("eb-all.tsv").filter { case line =>
+      val title = line.split("\t")(0)
+      // enwiki_selection_titles.contains(title)
+      true
+    }
+
+    persist(toTextFile(eb_selection_dlist, "eb-12k-maybe.tsv"))
 
     // : DList[(IntWritable, WikipediaPage)]
-    val input = SequenceInput.fromSequenceFile[IntWritable, WikipediaPage]("enwiki-latest-blockcompressed")
+    // val input = SequenceInput.fromSequenceFile[IntWritable, WikipediaPage]("enwiki-latest-blockcompressed")
+    // val pages = input.filter { case (intwritable, page) =>
+    //   val wikititle = page.getTitle()
+    //   val alphatitle = wikititle.replaceAll("\\W+", "").toLowerCase
 
-    val pages = input.filter { case (intwritable, page) =>
-      val wikititle = page.getTitle()
-      val alphatitle = wikititle.replaceAll("\\W+", "").toLowerCase
+    //   eb1911Titles.contains(alphatitle)
+    // } map { case (intwritable, page) =>
+    //   val wikititle = page.getTitle()
+    //   val alphatitle = wikititle.replaceAll("\\W+", "").toLowerCase
 
-      eb1911Titles.contains(alphatitle)
-    } map { case (intwritable, page) =>
-      val wikititle = page.getTitle()
-      val alphatitle = wikititle.replaceAll("\\W+", "").toLowerCase
-
-      alphatitle + "\t" + wikititle + "\t" + page.getContent().replaceAll("[\\r\\n\\t]+", " ")
-    }
+    //   alphatitle + "\t" + wikititle + "\t" + page.getContent().replaceAll("[\\r\\n\\t]+", " ")
+    // }
 
     // articleContent.set(p.getContent().replaceAll("[\\r\\n]+", " "));
 
@@ -43,7 +47,6 @@ object EBWiki extends ScoobiApp {
     // 1648060 12021711  Genki o Dashite
     // 3715988 34349413  Liugezhuang
     // 3955759 37035340  2012–13 Eredivisie (ice hockey) season
-    persist(toTextFile(pages, "title-overlap-1", overwrite=true))
     // val key = reader.getKeyClass().newInstance().asInstanceOf[WritableComparable[IntWritable]]
     // val value = reader.getValueClass().newInstance().asInstanceOf[Writable]
 

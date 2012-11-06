@@ -1,4 +1,5 @@
 #!/bin/sh
+# execute this on the namenode only
 
 # render mapred-site.xml.template -> mapred-site.xml
 NAMENODE=`hostname -s`
