@@ -1,7 +1,7 @@
 # Tacc-Hadoop
 
 This project exists for two purposes.  First, it is a repository of useful tools for working with TACC.
-And second, it is template for building a project using hadoop and the scala-based hadoop-wrapper scoobi.
+And second, it is template for building a project using hadoop and the scala-based hadoop-wrapper [scoobi](https://github.com/NICTA/scoobi).
 
 ## Setting up the environment
 
@@ -20,16 +20,22 @@ Get this repository:
 
 Now log out and back in, or simply `source ~/tacc-hadoop/hadoop-conf/hadoop-env.sh`.
 
-Other useful modules: `module load python/2.7.1-epd`
+Other useful modules that you can load on TACC: `module load python/2.7.1-epd`
 
 ## Cluster commands
 
 Start a cluster:
 
-    start 10 5   # reserve a 5-machine cluster for 10 hours
-    showq        # show the queue
-    qstat        # show the queue information
-    nn           # ssh to the namenode
+    # Tacc-Hadoop command to reserve a 5-machine cluster for 10 hours.
+    # JobName can be anything without spaces and is not required
+    start 10 5 JobName
+
+    # Tacc cluster commands to check on the status of your task request
+    showq
+    qstat
+
+    # Tacc-Hadoop command to ssh to the namenode
+    nn
 
     # run the pi test job
     hadoop jar $HADOOP_HOME/hadoop-*examples*.jar pi 10 1000
@@ -41,9 +47,6 @@ If you request just one machine, you won't be able to run Hadoop jobs. (Though t
 
 Other commands:
 
-    vnc_cmd                         # print the command needed to set up a vnc connection
-
-    # fix the cluster when it is screwed up
     stop-cluster.sh
     start-cluster.sh
 
@@ -53,7 +56,7 @@ Other commands:
 
 ### .Xauthority
 
-If you get errors like the following in your HadoopJob.out
+If you get errors like the following in your job output:
 
     Warning: untrusted X11 forwarding setup failed: xauth key data not generated
     c201-116: Warning: No xauth data; using fake authentication data for X11 forwarding.
@@ -64,6 +67,8 @@ Simply `rm ~/.Xauthority`
 ### VNC
 
 For the Mac, Chicken is a free VNC client. Here's a link to the latest installer from Sourceforge, relinked to a github repository: [Chicken-2.2b2.dmg](https://github.com/downloads/chbrown/chicken/Chicken-2.2b2.dmg).
+
+However, the default job script here doesn't set up anything remotely related to VNC.
 
 ## Running a hadoop job locally
 
@@ -145,6 +150,3 @@ you to actually change the code.  It works on any way that you run your job:
 If you haven't used Longhorn/TACC before, you'll need to set up a VNC password, even if you aren't going to use VNC. Passwords are truncated to 8 characters.
 
     vncpasswd
-
-
-# /home/01683/benwing/qsub
