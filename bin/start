@@ -10,14 +10,14 @@ if [[ $HOURS ]] && [[ $CORES ]]; then
   echo "rm -rf $HADOOP_LOG_DIR"
   rm -rf $HADOOP_LOG_DIR
 
-  cd $TACC_HADOOP/hadoop-templates
-  cat hadoop.job.template | sed \
+  cat $TACC_HADOOP/jobs/hadoop.template | sed \
     -e "s/JOBNAME/$JOBNAME/" \
     -e "s/CORES/$CORES/" \
     -e "s/HOURS/$HOURS/" \
-    -e "s/TACC_PROJECT_NAME/$TACC_PROJECT_NAME/" > hadoop.job
+    -e "s/TACC_PROJECT_NAME/$TACC_PROJECT_NAME/" > $TACC_HADOOP/jobs/hadoop
 
-  qsub $TACC_HADOOP/hadoop-templates/hadoop.job
+  qsub $TACC_HADOOP/jobs/hadoop
+  cat $TACC_HADOOP/jobs/hadoop
 else
   echo "Usage: $0 NUM_HOURS NUM_MACHINES JOB_NAME"
   echo "Example Usage: $0 1 3 HadoopWordCount"

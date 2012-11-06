@@ -1,4 +1,4 @@
-export JAVA_HOME=/share/apps/teragrid/jdk1.6.0_19-64bit/
+export JAVA_HOME=/share/apps/teragrid/jdk1.6.0_19-64bit
 export TACC_HADOOP=$HOME/tacc-hadoop
 export HADOOP_HOME=$TACC_HADOOP/hadoop
 export HADOOP_CONF_DIR=$TACC_HADOOP/hadoop-conf

@@ -12,15 +12,15 @@
 #$ -o $HOME/$JOB_NAME.out           # Name of the output file
 #$ -pe 1way CORES                   # Request (cores)/8 machines
 #$ -q hadoop                        # Submit to the "hadoop" queue (largemem is another queue)
-#$ -P data                          # ?
-#$ -l h_rt=HOURS:00:00              # runtime (hh:mm:ss) - 4 hours
+#$ -P data                          # Project name (Longhorn types: vis, data, gpgpu, hpc)
+#$ -l h_rt=HOURS:00:00              # runtime (hh:mm:ss)
 #$ -A TACC_PROJECT_NAME             # set in profile_user.sh from /share/sge6.2/default/acct/map/ files
 
 . ~/tacc-hadoop/hadoop-conf/hadoop-env.sh
 
 echo "Executing $JOB_NAME ($JOB_ID) at: `date`"
 export NAMENODE=`hostname -s`
-echo "Hostname of namenode: $NODE_HOSTNAME"
+echo "Hostname of namenode: $NAMENODE"
 
 # set memory limits to 95% of total memory to prevent node death
 NODE_MEMORY=`free -k | grep ^Mem: | awk '{ print $2; }'`
@@ -32,6 +32,23 @@ echo "memory limit set to $NODE_MEMORY_LIMIT kilobytes"
 WAYNESS=`echo $PE | perl -pe 's/([0-9]+)way/\1/;'`
 echo "set wayness to $WAYNESS"
 
+ln -s $PE_HOSTFILE /tmp/pe_hostfile
+
 start-cluster.sh
+
+# notify chbrown when ready (thanks roller!)
+function prowl () {
+    curl -f https://api.prowlapp.com/publicapi/add \
+      -d apikey=9910e4647f5e4017afe7318eab71052d8685047a \
+      -d application="TACC - $NAMENODE" \
+      -d event="Job Status Alert" \
+      -d description="$1"
+}
+prowl "Ready with $JOB_NAME (`date`)"
+
+# fixme
+sleep 3570 # 30s short of 1h
+echo "Sleeping 3570 seconds"
+stop-cluster.sh
 
 echo "Finished executing $JOB_NAME ($JOB_ID) at: `date`"
