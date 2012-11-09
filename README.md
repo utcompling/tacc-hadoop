@@ -11,23 +11,19 @@ You'll need to set up a few things to get yourself access to Longhorn.
 3. On your local machine, add a shortcut to the longhorn login node, which I will name `tacc`.
     `dig a longhorn.tacc.utexas.edu` will show you the IP address in case the one below does not work.
 
-```sh
-echo '129.114.50.211 tacc' >> /etc/hosts
-ssh taccname@tacc
-```
+        echo '129.114.50.211 tacc' >> /etc/hosts
+        ssh taccname@tacc
 
 4. Great, now you're on TACC, on the login node. Clone this repository to your home folder:
 
-```sh
-cd ~
-module load git
-git clone --recursive https://github.com/chbrown/tacc-hadoop.git
-echo '. ~/tacc-hadoop/hadoop-conf/hadoop-env.sh' >> ~/.bash_profile
-```
+        cd ~
+        module load git
+        git clone --recursive https://github.com/chbrown/tacc-hadoop.git
+        echo '. ~/tacc-hadoop/hadoop-conf/hadoop-env.sh' >> ~/.bash_profile
 
 5. Now you can either log out and back in, or run this manually, just this once:
 
-    source ~/tacc-hadoop/hadoop-conf/hadoop-env.sh
+        source ~/tacc-hadoop/hadoop-conf/hadoop-env.sh
 
 ## Starting a cluster
 
@@ -87,7 +83,6 @@ Look at the output:
     > (short,1)
     > (test,2)
     > (this,2)
-
 
 ---
 
@@ -149,7 +144,7 @@ By default, this repository uses another user's Hadoop package, which is at:
 
     /scratch/01813/roller/software/lib/hadoop/hadoop-0.20.2-cdh3u2/
 
-You can use your own Hadoop, for example, the newer `hadoop-0.20.2-cdh3u5`, which you can get from [http://archive.cloudera.com/cdh/3/]. Simply download, unpackage, and link:
+You can use your own Hadoop, for example, the newer `hadoop-0.20.2-cdh3u5`, which you can get from http://archive.cloudera.com/cdh/3/. Simply download, unpackage, and link:
 
     cd $TACC_HADOOP
     rm hadoop
@@ -167,4 +162,4 @@ Oddly, you can't use some of them from your cluster nodes. `module load git` doe
 
 ---
 
-Some UT graduate students have compiled a useful collection of TACC-related notes, geared towards Windows users who prefer Java and graphical user interfaces. [https://sites.google.com/site/tacchadoop/]
+Some UT graduate students have compiled a useful collection of TACC-related notes, geared towards Windows users who prefer Java and graphical user interfaces. https://sites.google.com/site/tacchadoop/
