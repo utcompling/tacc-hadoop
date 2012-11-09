@@ -11,15 +11,19 @@ You'll need to set up a few things to get yourself access to Longhorn.
 3. On your local machine, add a shortcut to the longhorn login node, which I will name `tacc`.
     `dig a longhorn.tacc.utexas.edu` will show you the IP address in case the one below does not work.
 
-    echo '129.114.50.211 tacc' >> /etc/hosts
-    ssh taccname@tacc
+```sh
+echo '129.114.50.211 tacc' >> /etc/hosts
+ssh taccname@tacc
+```
 
 4. Great, now you're on TACC, on the login node. Clone this repository to your home folder:
 
-    cd ~
-    module load git
-    git clone --recursive https://github.com/chbrown/tacc-hadoop.git
-    echo '. ~/tacc-hadoop/hadoop-conf/hadoop-env.sh' >> ~/.bash_profile
+```sh
+cd ~
+module load git
+git clone --recursive https://github.com/chbrown/tacc-hadoop.git
+echo '. ~/tacc-hadoop/hadoop-conf/hadoop-env.sh' >> ~/.bash_profile
+```
 
 5. Now you can either log out and back in, or run this manually, just this once:
 
