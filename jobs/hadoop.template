@@ -38,15 +38,14 @@ ln -sf $PE_HOSTFILE /tmp/pe_hostfile
 
 start-cluster.sh
 
-# notify chbrown when ready (thanks roller!)
-function prowl () {
-    curl -f https://api.prowlapp.com/publicapi/add \
-      -d apikey=9910e4647f5e4017afe7318eab71052d8685047a \
-      -d application="TACC - $NAMENODE" \
-      -d event="Job Status Alert" \
-      -d description="$1"
-}
-prowl "Ready with $JOB_NAME (`date`)"
+# notify the user when ready (thanks roller!), if they specified a PROWL_API_KEY variable in the environment
+if [[ -n "$PROWL_API_KEY" ]]; then
+  curl -f https://api.prowlapp.com/publicapi/add \
+    -d apikey="$PROWL_API_KEY" \
+    -d application="TACC - $NAMENODE" \
+    -d event="Job Status Alert" \
+    -d description="Ready with $JOB_NAME (`date`)"
+fi
 
 sleep `expr HOURS \\* 3600 - 60` # sleep for the duration, minus a minute to cool off
 

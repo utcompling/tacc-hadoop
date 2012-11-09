@@ -59,6 +59,17 @@ If you have any trouble, or see anything weird in the output, you can stop and r
     stop-cluster.sh
     start-cluster.sh
 
+If you have an iThing and want to be notified when your job starts, you can add an environmental variable to `~/tacc-hadoop/hadoop-conf/hadoop-env.sh` or `~/.bash_profile`:
+
+    export PROWL_API_KEY=215f5a87c6e95c5c43dcc8ca74994ce67c6e95c5
+
+This is used in `jobs/hadoop.template`, which `start` renders to `jobs/hadoop` and then submits to the Longhorn queue manager with `qsub`. So if you want to change the message it sends you, look for the PROWL_API_KEY string in `jobs/hadoop.template` and change the fields sent to `curl` however you like.
+
+To get an API key, [register for a free Prowl account](http://www.prowlapp.com/), log in, then go to the [API tab](https://www.prowlapp.com/api_settings.php) to view / create a new API key. Paste that key into one of the files above, instead of the "215f5a8..." example.
+
+The iPhone app is $2.99. You just install, log in with the same username and password you used for the Prowl website, and then everything *just works*.
+It works great, by the way. The notifications have no delay, as far as I can tell. The job template does allow specifying an `-M me@gmail.com` flag, but in my experience, this takes about three days to all the way from JJ. Pickle to my computer.
+
 ## Running hadoop jobs with scoobi
 
 To run the project locally (for testing with a small amount of data, for example), you need to make sure your configuration is not expecting a cluster:

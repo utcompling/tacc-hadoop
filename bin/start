@@ -14,7 +14,8 @@ if [[ $HOURS ]] && [[ $CORES ]]; then
     -e "s/JOBNAME/$JOBNAME/" \
     -e "s/CORES/$CORES/" \
     -e "s/HOURS/$HOURS/" \
-    -e "s/TACC_PROJECT_NAME/$TACC_PROJECT_NAME/" > $TACC_HADOOP/jobs/hadoop
+    -e "s/TACC_PROJECT_NAME/$TACC_PROJECT_NAME/" \
+    -e "s/HOURS/$PROWL/" > $TACC_HADOOP/jobs/hadoop
 
   qsub $TACC_HADOOP/jobs/hadoop
   cat $TACC_HADOOP/jobs/hadoop

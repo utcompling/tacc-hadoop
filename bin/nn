@@ -1,7 +1,7 @@
-namenode=`qstat | perl -ne 'print /hadoop@(.+).longhorn/'`
+NAMENODE=`qstat | perl -ne 'print /hadoop@(.+).longhorn/'`
 
-if [[ -n "$namenode" ]] ; then
-    ssh $namenode
+if [[ -n "$NAMENODE" ]] ; then
+    ssh $NAMENODE
 else
     echo "No currently running clusters. Please check the cluster status with qstat or showq."
 fi
