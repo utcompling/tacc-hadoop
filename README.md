@@ -158,7 +158,7 @@ While you can't `sudo` on TACC to install system packages, there are some other 
 
     module load python/2.7.1-epd
 
-Oddly, you can't use some of them from your cluster nodes. `module load git` doesn't work, for example. I've built `git` and `tmux` packages and put them in a `~/local` folder with `~/local/bin` on my `PATH`
+Oddly, you can't use some of them from your cluster nodes. `module load git` doesn't work, for example. I've built `git` and `tmux` packages and put them in a `~/local` folder with `~/local/bin` on my `PATH`, which is working out well.
 
 ---
 
