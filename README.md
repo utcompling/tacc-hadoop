@@ -1,119 +1,123 @@
 # Tacc-Hadoop
 
-This project exists for two purposes.  First, it is a repository of useful tools for working with TACC.
-And second, it is template for building a project using hadoop and the scala-based hadoop-wrapper [scoobi](https://github.com/NICTA/scoobi).
+This will get you started using a Hadoop cluster on [TACC](http://www.tacc.utexas.edu/) with [scoobi](https://github.com/NICTA/scoobi), a Scala wrapper of the Hadoop interface. Using Scoobi is not required, and this repository still has some useful tools even if you're working with Ruby: [Wukong](https://github.com/infochimps/wukong), Python: [Dumbo](https://github.com/klbostee/dumbo), or plain old Java: [Hadoop-MapReduce](https://github.com/apache/hadoop-mapreduce).
 
 ## Setting up the environment
 
-On your local machine, add a shortcut to the longhorn login node, which will be named `tacc`. `dig a longhorn.tacc.utexas.edu` will show you the IP address.
+You'll need to set up a few things to get yourself access to Longhorn.
+
+1. Get an [account on TACC](https://portal.tacc.utexas.edu/). I'll assume you use the username `taccname`.
+2. Ask [Weijia Xu](http://www.tacc.utexas.edu/staff/weijia-xu) to add you to the `hadoop` group on Longhorn.
+3. On your local machine, add a shortcut to the longhorn login node, which I will name `tacc`.
+    `dig a longhorn.tacc.utexas.edu` will show you the IP address in case the one below does not work.
 
     echo '129.114.50.211 tacc' >> /etc/hosts
-    ssh tacc
-    # if your local username and your TACC username differ:
-    # ssh whoamiontacc@tacc
+    ssh taccname@tacc
 
-Get this repository:
+4. Great, now you're on TACC, on the login node. Clone this repository to your home folder:
 
+    cd ~
     module load git
     git clone --recursive https://github.com/chbrown/tacc-hadoop.git
-    echo '. ~/tacc-hadoop/hadoop-conf/hadoop-env.sh' >> ~/.bashrc
+    echo '. ~/tacc-hadoop/hadoop-conf/hadoop-env.sh' >> ~/.bash_profile
 
-Now log out and back in, or simply `source ~/tacc-hadoop/hadoop-conf/hadoop-env.sh`.
+5. Now you can either log out and back in, or run this manually, just this once:
 
-Other useful modules that you can load on TACC: `module load python/2.7.1-epd`
+    source ~/tacc-hadoop/hadoop-conf/hadoop-env.sh
 
-## Cluster commands
+## Starting a cluster
 
-Start a cluster:
+Reserve a 5-machine cluster for 10 hours. JobName can be anything without spaces and is not required:
 
-    # Tacc-Hadoop command to reserve a 5-machine cluster for 10 hours.
-    # JobName can be anything without spaces and is not required
     start 10 5 JobName
 
-    # Tacc cluster commands to check on the status of your task request
+It may take a while to fit that in. To check on how many other people are using the cluster and see who else is waiting in the queue:
+
     showq
+
+Your job has your username in it, as well as the first 10 characters of the `JobName` you used above.
+You can also check on the status of just *your* request:
+
     qstat
 
-    # Tacc-Hadoop command to ssh to the namenode
+The output of that program will show you a hostname under the `queue` column when your cluster is ready. That hostname is the `namenode` of your cluster, and is where you will do most of your work from.
+You can ssh to that node, or simply call
+
     nn
 
-    # run the pi test job
+Once your cluster is running and you've ssh'ed over, you can run the `pi` test job, which simply calculates Pi.
+
+    # Calculate Pi with 10 maps and 1000 samples
     hadoop jar $HADOOP_HOME/hadoop-*examples*.jar pi 10 1000
 
-    # check the cluster
+Check on the general health of your cluster, to make sure HDFS is up and running:
+
     hadoop dfsadmin -report
 
-If you request just one machine, you won't be able to run Hadoop jobs. (Though this is of course still useful for running jobs that just require a single machine.)
-
-Other commands:
+If you have any trouble, or see anything weird in the output, you can stop and re-start the cluster:
 
     stop-cluster.sh
     start-cluster.sh
 
-    init                            # used to control memory settings across the entire cluster
+## Running hadoop jobs with scoobi
 
-## Troubleshooting
+To run the project locally (for testing with a small amount of data, for example), you need to make sure your configuration is not expecting a cluster:
 
-### .Xauthority
+    stop-cluster.sh
 
-If you get errors like the following in your job output:
+Now put in some sample data:
 
-    Warning: untrusted X11 forwarding setup failed: xauth key data not generated
-    c201-116: Warning: No xauth data; using fake authentication data for X11 forwarding.
-    c201-116: /usr/bin/xauth:  error in locking authority file /home/01613/chbrown/.Xauthority
+    cd $TACC_HADOOP
+    echo "this is a test . this test is short ." > example.txt
+    rm -rf example.wc
 
-Simply `rm ~/.Xauthority`
+And run!
 
-### VNC
+    ./sbt "run-main dhg.tacc.WordCount example.txt example.wc"
 
-For the Mac, Chicken is a free VNC client. Here's a link to the latest installer from Sourceforge, relinked to a github repository: [Chicken-2.2b2.dmg](https://github.com/downloads/chbrown/chicken/Chicken-2.2b2.dmg).
+Look at the output:
 
-However, the default job script here doesn't set up anything remotely related to VNC.
-
-## Running a hadoop job locally
-
-Run this project locally:
-
-    ~$ cd $TACC_HADOOP
-    ~/tacc-hadoop$ echo "this is a test . this test is short ." > example.txt
-    ~/tacc-hadoop$ rm -rf example.wc
-    ~/tacc-hadoop$ ./sbt "run-main dhg.tacc.WordCount example.txt example.wc"
-    ~/tacc-hadoop$ cat example.wc/ch0out0-r-00000
-    (a,1)
-    (is,2)
-    (short,1)
-    (test,2)
-    (this,2)
+    cat example.wc/ch0out0-r-00000
+    > (a,1)
+    > (is,2)
+    > (short,1)
+    > (test,2)
+    > (this,2)
 
 
-Running a hadoop job on the cluster
------------------------------------
+---
 
-    ~$ cd $TACC_HADOOP
+To run on the cluster, once your cluster is up and running and `hadoop dfsadmin -report` looked promising:
 
-Package a jar:
+    cd $TACC_HADOOP
 
-    ~/tacc-hadoop$ ./sbt assembly
+Package up a jar of the SBT build. This can take about 2 minutes.
 
-Make some data:
+    ./sbt assembly
 
-    ~/tacc-hadoop$ echo "this is a test . this test is short ." > example.txt
-    ~/tacc-hadoop$ hadoop fs -put example.txt example.txt
+Make up some data:
+
+    echo "this is a test . this test is short ." > example.txt
+    hadoop fs -put example.txt example.txt
+
+There is a helper command `put` that is a simple shortcut for `hadoop -fs put`. The above could be replicated with:
+
+    put example.txt
 
 Run the `materialize` example:
 
-    ~/tacc-hadoop$ hadoop jar target/tacc-hadoop-assembly.jar dhg.tacc.WordCountMaterialize example.txt
+    run cluster dhg.tacc.WordCountMaterialize example.txt
 
-This will produce
+This will produce:
 
     List((a,1), (is,2), (short,1), (test,2), (this,2))
 
 Run the file-output example:
 
-    ~/tacc-hadoop$ hadoop jar target/tacc-hadoop-assembly.jar dhg.tacc.WordCount example.txt example.wc
-    ~/tacc-hadoop$ rm -rf example.wc
-    ~/tacc-hadoop$ hadoop fs -getmerge example.wc example.wc
-    ~/tacc-hadoop$ cat example.wc
+    hadoop jar target/tacc-hadoop-assembly.jar dhg.tacc.WordCount example.txt example.wc
+    rm -rf example.wc
+    hadoop fs -getmerge example.wc example.wc
+    cat example.wc
 
 This will produce
 
@@ -123,30 +127,40 @@ This will produce
     (test,2)
     (this,2)
 
-
-With `run` script
------------------
-
-    ~/tacc-hadoop$ run compile                                                # compile code for local use
-    ~/tacc-hadoop$ run local dhg.tacc.WordCountMaterialize example.txt        # run a scala script locally
-
-    ~/tacc-hadoop$ run jar                                                    # jar up the project for use by hadoop on the cluster
-    ~/tacc-hadoop$ run cluster dhg.tacc.WordCountMaterialize example.txt      # run a scala script in distributed mode
-
-
-Other useful stuff
-------------------
+## Other useful stuff
 
 Scoobi allows you to pass command-line options to change its behavior.  One useful
 option is `inmemory` which will run your job locally through a pipeline backed by
 scala collections.  This is a very fast way to test your job that doesn't require
 you to actually change the code.  It works on any way that you run your job:
 
-    ~/tacc-hadoop$ ./sbt "run-main dhg.tacc.WordCountMaterialize example.txt -- scoobi inmemory"
-    ~/tacc-hadoop$ run local dhg.tacc.WordCountMaterialize example.txt -- scoobi inmemory
-    ~/tacc-hadoop$ run cluster dhg.tacc.WordCountMaterialize example.txt -- scoobi inmemory
+    cd $TACC_HADOOP
+    ./sbt "run-main dhg.tacc.WordCountMaterialize example.txt -- scoobi inmemory"
+    run local dhg.tacc.WordCountMaterialize example.txt -- scoobi inmemory
+    run cluster dhg.tacc.WordCountMaterialize example.txt -- scoobi inmemory
 
+---
 
-If you haven't used Longhorn/TACC before, you'll need to set up a VNC password, even if you aren't going to use VNC. Passwords are truncated to 8 characters.
+By default, this repository uses another user's Hadoop package, which is at:
 
-    vncpasswd
+    /scratch/01813/roller/software/lib/hadoop/hadoop-0.20.2-cdh3u2/
+
+You can use your own Hadoop, for example, the newer `hadoop-0.20.2-cdh3u5`, which you can get from [http://archive.cloudera.com/cdh/3/]. Simply download, unpackage, and link:
+
+    cd $TACC_HADOOP
+    rm hadoop
+    wget http://archive.cloudera.com/cdh/3/hadoop-0.20.2-cdh3u5.tar.gz
+    tar xzf hadoop-0.20.2-cdh3u5.tar.gz
+    ln -s hadoop-0.20.2-cdh3u5 hadoop
+
+## Miscellaneous cluster stuff
+
+While you can't `sudo` on TACC to install system packages, there are some other modules you can load from the TACC system. A recent Python is one:
+
+    module load python/2.7.1-epd
+
+Oddly, you can't use some of them from your cluster nodes. `module load git` doesn't work, for example. I've built `git` and `tmux` packages and put them in a `~/local` folder with `~/local/bin` on my `PATH`
+
+---
+
+Some UT graduate students have compiled a useful collection of TACC-related notes, geared towards Windows users who prefer Java and graphical user interfaces. [https://sites.google.com/site/tacchadoop/]
