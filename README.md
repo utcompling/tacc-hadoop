@@ -67,8 +67,9 @@ This is used in `jobs/hadoop.template`, which `start` renders to `jobs/hadoop` a
 
 To get an API key, [register for a free Prowl account](http://www.prowlapp.com/), log in, then go to the [API tab](https://www.prowlapp.com/api_settings.php) to view / create a new API key. Paste that key into one of the files above, instead of the "215f5a8..." example.
 
-The iPhone app is $2.99. You just install, log in with the same username and password you used for the Prowl website, and then everything *just works*.
-It works great, by the way. The notifications have no delay, as far as I can tell. The job template does allow specifying an `-M me@gmail.com` flag, but in my experience, this takes about three days to all the way from JJ. Pickle to my computer.
+The iPhone app is $2.99. You just install, log in with the same username and password you used for the Prowl website, and then everything *just works*. The notifications have no delay, as far as I can tell.
+
+The job template does allow specifying an `-M me@gmail.com` flag, which presumably emails you when the job starts/aborts/ends, but in my experience, it takes about three days for these emails to get all the way from JJ. Pickle to my computer. Not awfully useful, since the maximum reservation duration on TACC is much shorter than 72 hours.
 
 ## Running hadoop jobs with scoobi
 
