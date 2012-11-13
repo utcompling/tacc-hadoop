@@ -14,7 +14,11 @@ You'll need to set up a few things to get yourself access to Longhorn.
         echo '129.114.50.211 tacc' >> /etc/hosts
         ssh taccname@tacc
 
-4. Great, now you're on TACC, on the login node. Clone this repository to your home folder:
+4. Great, now you're on TACC, on the login node. Change your default shell to bash (if it's not bash already):
+
+       chsh -s /bin/bash
+
+5. Clone this repository to your home folder:
 
         cd ~
         module load git
