@@ -40,9 +40,9 @@ You'll need to set up a few things to get yourself access to Longhorn.
 
 ## Starting a cluster
 
-Reserve a 5-machine cluster for 10 hours. JobName can be anything without spaces and is not required:
+Reserve a 3-machine cluster for 2 hours. JobName can be anything without spaces and is not required:
 
-    start 10 3 JobName
+    start 2 3 JobName
 
 It may take a while to fit that in. To check on how many other people are using the cluster and see who else is waiting in the queue:
 
