@@ -86,7 +86,7 @@ are Scala-based frameworks that provides a very nice interfaces to Hadoop.  Both
 configured within this project and there are example jobs for each.  Below is a demonstration 
 of how to run Hadoop jobs using examples featuring each of these frameworks.
 
-These instructions make heavy use of a convenient `run` script for building and running jobs.  
+These instructions make heavy use of a convenient `run` script for building and running jobs. 
 If you are curious about the underlying commands, feel free to inspect the script's 
 [source](https://github.com/utcompling/tacc-hadoop/blob/master/run).
 
@@ -144,7 +144,7 @@ and remote filesystems:
 
 ### Running jobs in local mode
 
-The `cluster` keyword used above directs the script to run distributed on the cluster.  
+The `cluster` keyword used above directs the script to run distributed on the cluster. 
 Replacing this with `local` will run the job very quickly in memory, which is useful 
 for testing on small amounts of data.
 
