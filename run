@@ -15,7 +15,7 @@ case "$FIRST_CMD" in
 
     if [[ -n $SECOND_CMD ]] ; then
       case "$SECOND_CMD" in
-        local | cluster) ;;  # second command possibilities
+        local | cluster | local-scalding | cluster-scalding) ;;  # second command possibilities
         *)  # second command is invalid
           echo "$USAGE" >&2
           exit 1;;
@@ -30,7 +30,7 @@ case "$FIRST_CMD" in
         $TACC_HADOOP/sbt assembly;;
     esac;;
 
-  local | cluster)  # second command possibilities
+  local | cluster | local-scalding | cluster-scalding)  # second command possibilities
     SECOND_CMD=$1
     shift ;;
 
@@ -47,6 +47,13 @@ case "$SECOND_CMD" in
 
   cluster)
     hadoop jar target/scala-2.9.2/tacc-hadoop-assembly.jar "$@";;
+
+   local-scalding)
+     $START com.twitter.scalding.Tool "$@" --local;;
+
+   cluster-scalding)
+     hadoop jar target/scala-2.9.2/tacc-hadoop-assembly.jar com.twitter.scalding.Tool "$@" --hdfs;;
+
 esac
 fi
 

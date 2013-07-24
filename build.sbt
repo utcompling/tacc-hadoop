@@ -12,8 +12,11 @@ scalaVersion := "2.9.2"
 
 resolvers ++= Seq(
   "Sonatype-snapshots" at "http://oss.sonatype.org/content/repositories/snapshots",
-  "cloudera" at "https://repository.cloudera.com/content/repositories/releases"
+  "cloudera" at "https://repository.cloudera.com/content/repositories/releases",
+  "conjars" at "http://conjars.org/repo"
 )
+
+libraryDependencies += "com.twitter" % "scalding-core_2.9.2" % "0.8.6"
 
 scalacOptions ++= Seq("-deprecation", "-Ydependent-method-types", "-optimize", "-unchecked")
 

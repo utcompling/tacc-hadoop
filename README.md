@@ -96,10 +96,10 @@ Now put in some sample data:
 And run!
 
     run compile 
-    run local com.utcompling.tacc.scoobi.WordCount example.txt example.wc  
+    run local com.utcompling.tacc.scoobi.example.WordCount example.txt example.wc  
     # ALTERNATIVES
-    #   run compile local com.utcompling.tacc.scoobi.WordCount example.txt example.wc
-    #   ./sbt "run-main com.utcompling.tacc.scoobi.WordCount example.txt example.wc"
+    #   run compile local com.utcompling.tacc.scoobi.example.WordCount example.txt example.wc
+    #   ./sbt "run-main com.utcompling.tacc.scoobi.example.WordCount example.txt example.wc"
 
 Look at the output:
 
@@ -127,8 +127,8 @@ Make up some data:
 
 Run the `materialize` example:
 
-    run cluster com.utcompling.tacc.scoobi.WordCountMaterialize example.txt
-    # SHORTHAND FOR: hadoop jar target/scala-2.9.2/tacc-hadoop-assembly.jar com.utcompling.tacc.scoobi.WordCountMaterialize example.txt
+    run cluster com.utcompling.tacc.scoobi.example.WordCountMaterialize example.txt
+    # SHORTHAND FOR: hadoop jar target/scala-2.9.2/tacc-hadoop-assembly.jar com.utcompling.tacc.scoobi.example.WordCountMaterialize example.txt
 
 This will produce:
 
@@ -136,8 +136,8 @@ This will produce:
 
 Run the file-output example:
 
-    run cluster com.utcompling.tacc.scoobi.WordCount example.txt example.wc
-    # SHORTHAND FOR: hadoop jar target/tacc-hadoop-assembly.jar com.utcompling.tacc.scoobi.WordCount example.txt example.wc
+    run cluster com.utcompling.tacc.scoobi.example.WordCount example.txt example.wc
+    # SHORTHAND FOR: hadoop jar target/tacc-hadoop-assembly.jar com.utcompling.tacc.scoobi.example.WordCount example.txt example.wc
 
 And retrieve the results:
 
@@ -162,10 +162,18 @@ This will produce
     run jar
     echo "this is a test . this test is short ." > example.txt
     put example.txt
-    run cluster com.utcompling.tacc.scoobi.WordCount example.txt example.wc
+    run cluster com.utcompling.tacc.scoobi.example.WordCount example.txt example.wc
     get example.wc
     exit
     stop
+
+
+## Running jobs using Scalding
+
+Everything is the same as the scoobi instructions, but use this command to run the scalding WordCount example.
+
+    run cluster-scalding com.utcompling.tacc.scalding.example.WordCount --args example.txt example.wc
+
 
 
 ## Other useful stuff
@@ -176,8 +184,8 @@ scala collections.  This is a very fast way to test your job that doesn't requir
 you to actually change the code.  It works on any way that you run your job:
 
     cd $TACC_HADOOP
-    run local com.utcompling.tacc.scoobi.WordCountMaterialize example.txt -- scoobi inmemory
-    run cluster com.utcompling.tacc.scoobi.WordCountMaterialize example.txt -- scoobi inmemory
+    run local com.utcompling.tacc.scoobi.example.WordCountMaterialize example.txt -- scoobi inmemory
+    run cluster com.utcompling.tacc.scoobi.example.WordCountMaterialize example.txt -- scoobi inmemory
 
 ---
 

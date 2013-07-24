@@ -1,4 +1,4 @@
-package com.utcompling.tacc.scoobi
+package com.utcompling.tacc.scoobi.example
 
 import com.nicta.scoobi.Scoobi._
 
