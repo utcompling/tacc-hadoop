@@ -1,4 +1,4 @@
-START="target/start"
+START="$TACC_HADOOP/target/start"
 
 USAGE="usage:
    `basename ${0}` [compile] [local CLASSNAME [ARGS...]]
@@ -8,16 +8,31 @@ USAGE="usage:
 FIRST_CMD=$1
 
 case "$FIRST_CMD" in
-  compile)
-    $TACC_HADOOP/sbt add-start-script-tasks start-script
-    shift;;
+  compile | jar)  # first command possibilities
+    shift
+    SECOND_CMD=$1
+    shift
 
-  jar)
-    $TACC_HADOOP/sbt assembly
-    shift;;
+    if [[ -n $SECOND_CMD ]] ; then
+      case "$SECOND_CMD" in
+        local | cluster) ;;  # second command possibilities
+        *)  # second command is invalid
+          echo "$USAGE" >&2
+          exit 1;;
+      esac
+    fi
 
-  local | cluster) 
-    FIRST_CMD="";;
+    case "$FIRST_CMD" in
+      compile)
+        $TACC_HADOOP/sbt add-start-script-tasks start-script;;
+
+      jar)
+        $TACC_HADOOP/sbt assembly;;
+    esac;;
+
+  local | cluster)  # second command possibilities
+    SECOND_CMD=$1
+    shift ;;
 
   *)
     echo "$USAGE" >&2
@@ -25,21 +40,13 @@ case "$FIRST_CMD" in
 esac
 
 
-SECOND_CMD=$1
-shift
-
 if [[ -n $SECOND_CMD ]] ; then
 case "$SECOND_CMD" in
-
   local)
     $START "$@";;
 
   cluster)
     hadoop jar target/scala-2.9.2/tacc-hadoop-assembly.jar "$@";;
-
-  *)
-    echo "$USAGE" >&2
-    exit 1;;
 esac
 fi
 
