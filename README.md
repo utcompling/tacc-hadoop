@@ -159,6 +159,7 @@ This will produce
     start 10 3
     nn
     cd tacc-hadoop
+    echo "this is a test . this test is short ." > example.txt
     put example.txt
     run jar
     run cluster com.utcompling.tacc.scoobi.WordCount example.txt example.wc
