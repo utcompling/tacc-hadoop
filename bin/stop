@@ -1,0 +1,7 @@
+JOBID=($(qstat | sed -n '3p'))
+
+if [[ -n "$JOBID" ]] ; then
+    qdel $JOBID
+else
+    echo "No currently running clusters. Please check the cluster status with qstat or showq."
+fi

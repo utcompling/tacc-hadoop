@@ -16,13 +16,13 @@ You'll need to set up a few things to get yourself access to Longhorn.
 
 4. Great, now you're on TACC, on the login node. Change your default shell to bash (if it's not bash already):
 
-       chsh -s /bin/bash
+        chsh -s /bin/bash
 
 5. Clone this repository to your home folder:
 
         cd ~
         module load git
-        git clone --recursive https://github.com/chbrown/tacc-hadoop.git
+        git clone --recursive https://github.com/utcompling/tacc-hadoop.git
         echo '. ~/tacc-hadoop/hadoop-conf/hadoop-env.sh' >> ~/.bash_profile
 
 5. Now you can either log out and back in, or run this manually, just this once:
@@ -63,6 +63,12 @@ If you have any trouble, or see anything weird in the output, you can stop and r
     stop-cluster.sh
     start-cluster.sh
 
+To shutdown your cluster, use the `stop` command FROM THE LOGIN NODE
+
+    login1$ stop   # SHORTHAND FOR: qdel NNNNNN
+
+---
+
 If you have an iThing and want to be notified when your job starts, you can add an environmental variable to `~/tacc-hadoop/hadoop-conf/hadoop-env.sh` or `~/.bash_profile`:
 
     export PROWL_API_KEY=215f5a87c6e95c5c43dcc8ca74994ce67c6e95c5
@@ -89,11 +95,15 @@ Now put in some sample data:
 
 And run!
 
-    ./sbt "run-main dhg.tacc.WordCount example.txt example.wc"
+    run compile 
+    run local com.utcompling.tacc.scoobi.WordCount example.txt example.wc  
+    # ALTERNATIVES
+    #   run compile local com.utcompling.tacc.scoobi.WordCount example.txt example.wc
+    #   ./sbt "run-main com.utcompling.tacc.scoobi.WordCount example.txt example.wc"
 
 Look at the output:
 
-    cat example.wc/ch0out0-r-00000
+    cat example.wc/ch*out*-r-*
     > (a,1)
     > (is,2)
     > (short,1)
@@ -108,20 +118,17 @@ To run on the cluster, once your cluster is up and running and `hadoop dfsadmin 
 
 Package up a jar of the SBT build. This can take about 2 minutes.
 
-    ./sbt assembly
+    run jar  # SHORTHAND FOR: ./sbt assembly
 
 Make up some data:
 
     echo "this is a test . this test is short ." > example.txt
-    hadoop fs -put example.txt example.txt
-
-There is a helper command `put` that is a simple shortcut for `hadoop -fs put`. The above could be replicated with:
-
-    put example.txt
+    put example.txt   # SHORTHAND FOR: hadoop fs -put example.txt example.txt
 
 Run the `materialize` example:
 
-    run cluster dhg.tacc.WordCountMaterialize example.txt
+    run cluster com.utcompling.tacc.scoobi.WordCountMaterialize example.txt
+    # SHORTHAND FOR: hadoop jar target/scala-2.9.2/tacc-hadoop-assembly.jar com.utcompling.tacc.scoobi.WordCountMaterialize example.txt
 
 This will produce:
 
@@ -129,9 +136,13 @@ This will produce:
 
 Run the file-output example:
 
-    hadoop jar target/tacc-hadoop-assembly.jar dhg.tacc.WordCount example.txt example.wc
+    run cluster com.utcompling.tacc.scoobi.WordCount example.txt example.wc
+    # SHORTHAND FOR: hadoop jar target/tacc-hadoop-assembly.jar com.utcompling.tacc.scoobi.WordCount example.txt example.wc
+
+And retrieve the results:
+
     rm -rf example.wc
-    hadoop fs -getmerge example.wc example.wc
+    get example.wc   # SHORTHAND FOR: hadoop fs -getmerge example.wc example.wc
     cat example.wc
 
 This will produce
@@ -141,6 +152,20 @@ This will produce
     (short,1)
     (test,2)
     (this,2)
+
+
+## Running a hadoop job, start to finish: start cluster, run job, get results, shutdown
+
+    start 10 3
+    nn
+    cd tacc-hadoop
+    put example.txt
+    run jar
+    run cluster com.utcompling.tacc.scoobi.WordCount example.txt example.wc
+    get example.wc
+    exit
+    stop
+
 
 ## Other useful stuff
 

@@ -1,0 +1,5 @@
+#!/bin/sh
+for F in $*; do
+  echo hadoop fs -getmerge $F $F
+  hadoop fs -getmerge $F $F
+done

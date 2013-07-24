@@ -1,19 +1,32 @@
-SBT="java -Dfile.encoding=UTF8 -Xmx1536M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256m -jar sbt-launch-*.jar"
 START="target/start"
+
+    echo "USAGE:"
+    echo "    `basename ${0}` [compile] [local CLASSNAME [ARGS...]]"
+    echo "    `basename ${0}` [jar] [cluster CLASSNAME [ARGS...]]"
+
+case $1 in
+  compile)
+    $TACC_HADOOP/sbt add-start-script-tasks start-script
+    shift;;
+
+  jar)
+    $TACC_HADOOP/sbt assembly
+    shift;;
+esac
 
 CMD=$1
 shift
 
 case $CMD in
-  compile)
-    $SBT add-start-script-tasks start-script;;
 
   local)
     $START "$@";;
 
-  jar)
-    $SBT assembly;;
+    jar)
+    $TACC_HADOOP/sbt assembly;;
 
   cluster)
-    hadoop jar target/tacc-hadoop-assembly.jar "$@";;
+    hadoop jar target/scala-2.9.2/tacc-hadoop-assembly.jar "$@";;
+
 esac
+

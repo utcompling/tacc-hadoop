@@ -1,4 +1,4 @@
-package dhg.tacc
+package com.utcompling.tacc.scoobi
 
 import com.nicta.scoobi.Scoobi._
 
