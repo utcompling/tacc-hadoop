@@ -1,4 +1,4 @@
-# Tacc-Hadoop
+# TACC-Hadoop
 
 This will get you started using a Hadoop cluster on [TACC](http://www.tacc.utexas.edu/) with [scoobi](https://github.com/NICTA/scoobi), a Scala wrapper of the Hadoop interface. Using Scoobi is not required, and this repository still has some useful tools even if you're working with Ruby: [Wukong](https://github.com/infochimps/wukong), Python: [Dumbo](https://github.com/klbostee/dumbo), or plain old Java: [Hadoop-MapReduce](https://github.com/apache/hadoop-mapreduce).
 
@@ -29,11 +29,12 @@ You'll need to set up a few things to get yourself access to Longhorn.
 
         source ~/tacc-hadoop/hadoop-conf/hadoop-env.sh
 
+
 ## Starting a cluster
 
 Reserve a 5-machine cluster for 10 hours. JobName can be anything without spaces and is not required:
 
-    start 10 5 JobName
+    start 10 3 JobName
 
 It may take a while to fit that in. To check on how many other people are using the cluster and see who else is waiting in the queue:
 
@@ -67,127 +68,83 @@ To shutdown your cluster, use the `stop` command FROM THE LOGIN NODE
 
     login1$ stop   # SHORTHAND FOR: qdel NNNNNN
 
----
 
-If you have an iThing and want to be notified when your job starts, you can add an environmental variable to `~/tacc-hadoop/hadoop-conf/hadoop-env.sh` or `~/.bash_profile`:
+## Running jobs
 
-    export PROWL_API_KEY=215f5a87c6e95c5c43dcc8ca74994ce67c6e95c5
+[Scoobi](https://github.com/NICTA/scoobi) and [Scalding](https://github.com/twitter/scalding)
+are Scala-based frameworks that provides a very nice interfaces to Hadoop.  Both are already 
+configured within this project and there are example jobs for each.  Below is a demonstration 
+of how to run Hadoop jobs using examples featuring each of these frameworks.
 
-This is used in `jobs/hadoop.template`, which `start` renders to `jobs/hadoop` and then submits to the Longhorn queue manager with `qsub`. So if you want to change the message it sends you, look for the PROWL_API_KEY string in `jobs/hadoop.template` and change the fields sent to `curl` however you like.
+These instructions make heavy use of a convenient run script for building and running jobs.  If 
+you are curious about the underlying commands, feel free to inspect the script's 
+[source](https://github.com/utcompling/tacc-hadoop/blob/master/run).
 
-To get an API key, [register for a free Prowl account](http://www.prowlapp.com/), log in, then go to the [API tab](https://www.prowlapp.com/api_settings.php) to view / create a new API key. Paste that key into one of the files above, instead of the "215f5a8..." example.
 
-The iPhone app is $2.99. You just install, log in with the same username and password you used for the Prowl website, and then everything *just works*. The notifications have no delay, as far as I can tell.
+### Running jobs on the cluster
 
-The job template does allow specifying an `-M me@gmail.com` flag, which presumably emails you when the job starts/aborts/ends, but in my experience, it takes about three days for these emails to get all the way from JJ. Pickle to my computer. Not awfully useful, since the maximum reservation duration on TACC is much shorter than 72 hours.
+Start a cluster and log into the name node:
 
-## Running hadoop jobs with scoobi
-
-To run the project locally (for testing with a small amount of data, for example), you need to make sure your configuration is not expecting a cluster:
-
-    stop-cluster.sh
-
-Now put in some sample data:
-
+    start 10 3
+    nn
     cd $TACC_HADOOP
+    
+Build the full project jar so that it can be (automatically) uploaded to the cluster.
+
+    run jar
+    
+Create some data and put it into the Hadoop filesystem
+
     echo "this is a test . this test is short ." > example.txt
-    rm -rf example.wc
+    put example.txt
 
-And run!
+Run the [Scoobi word count](https://github.com/utcompling/tacc-hadoop/blob/master/src/main/scala/dhg/com/utcompling/tacc/scoobi/example/WordCount.scala) 
+or [Scalding word count](https://github.com/utcompling/tacc-hadoop/blob/master/src/main/scala/dhg/com/utcompling/tacc/scalding/example/WordCount.scala) 
+example jobs.  
 
-    run compile 
-    run local com.utcompling.tacc.scoobi.example.WordCount example.txt example.wc  
-    # ALTERNATIVES
-    #   run compile local com.utcompling.tacc.scoobi.example.WordCount example.txt example.wc
-    #   ./sbt "run-main com.utcompling.tacc.scoobi.example.WordCount example.txt example.wc"
+    run cluster com.utcompling.tacc.scoobi.example.WordCount example.txt example.wc
+    run cluster com.utcompling.tacc.scalding.example.WordCount --args example.txt example.wc
 
-Look at the output:
+And retrieve the results:
 
-    cat example.wc/ch*out*-r-*
+    get example.wc     # SHORTHAND FOR: hadoop fs -getmerge example.wc example.wc
+    cat example.wc
     > (a,1)
     > (is,2)
     > (short,1)
     > (test,2)
     > (this,2)
 
----
-
-To run on the cluster, once your cluster is up and running and `hadoop dfsadmin -report` looked promising:
-
-    cd $TACC_HADOOP
-
-Package up a jar of the SBT build. This can take about 2 minutes.
-
-    run jar  # SHORTHAND FOR: ./sbt assembly
-
-Make up some data:
-
-    echo "this is a test . this test is short ." > example.txt
-    put example.txt   # SHORTHAND FOR: hadoop fs -put example.txt example.txt
-
-Run the `materialize` example:
+There is a second example, [word cound materialize](https://github.com/utcompling/tacc-hadoop/blob/master/src/main/scala/dhg/com/utcompling/tacc/scoobi/example/WordCountMaterialize.scala), 
+demonstrating the ability to pull the result of a Hadoop job into memory.
 
     run cluster com.utcompling.tacc.scoobi.example.WordCountMaterialize example.txt
-    # SHORTHAND FOR: hadoop jar target/scala-2.9.2/tacc-hadoop-assembly.jar com.utcompling.tacc.scoobi.example.WordCountMaterialize example.txt
+    > List((a,1), (is,2), (short,1), (test,2), (this,2))
 
-This will produce:
+Finally, please stop the cluster when you are done working.
 
-    List((a,1), (is,2), (short,1), (test,2), (this,2))
-
-Run the file-output example:
-
-    run cluster com.utcompling.tacc.scoobi.example.WordCount example.txt example.wc
-    # SHORTHAND FOR: hadoop jar target/tacc-hadoop-assembly.jar com.utcompling.tacc.scoobi.example.WordCount example.txt example.wc
-
-And retrieve the results:
+    stop
+    
+NOTE: If you run multiple tests you will have to manually delete output files from the local
+and remote filesystems:
 
     rm -rf example.wc
-    get example.wc   # SHORTHAND FOR: hadoop fs -getmerge example.wc example.wc
-    cat example.wc
-
-This will produce
-
-    (a,1)
-    (is,2)
-    (short,1)
-    (test,2)
-    (this,2)
+    hadoop fs -rmr example.wc
 
 
-## Running a hadoop job, start to finish: start cluster, run job, get results, shutdown
+## Running jobs in local mode
 
-    start 10 3
-    nn
-    cd tacc-hadoop
-    run jar
-    echo "this is a test . this test is short ." > example.txt
-    put example.txt
-    run cluster com.utcompling.tacc.scoobi.example.WordCount example.txt example.wc
-    get example.wc
-    exit
-    stop
+Note that use of the keyword `cluster` above directs the script to run distributed on the 
+cluster.  Replacing this with `local` will run the job very quickly in memory, which is 
+useful for testing.
 
-
-## Running jobs using Scalding
-
-Everything is the same as the scoobi instructions, but use this command to run the scalding WordCount example.
-
-    run cluster-scalding com.utcompling.tacc.scalding.example.WordCount --args example.txt example.wc
-
+    run compile
+    run local com.utcompling.tacc.scoobi.example.WordCount example.txt example.wc
+    run local com.utcompling.tacc.scalding.example.WordCount --args example.txt example.wc
+    run local com.utcompling.tacc.scoobi.example.WordCountMaterialize example.txt
 
 
 ## Other useful stuff
-
-Scoobi allows you to pass command-line options to change its behavior.  One useful
-option is `inmemory` which will run your job locally through a pipeline backed by
-scala collections.  This is a very fast way to test your job that doesn't require
-you to actually change the code.  It works on any way that you run your job:
-
-    cd $TACC_HADOOP
-    run local com.utcompling.tacc.scoobi.example.WordCountMaterialize example.txt -- scoobi inmemory
-    run cluster com.utcompling.tacc.scoobi.example.WordCountMaterialize example.txt -- scoobi inmemory
-
----
 
 By default, this repository uses another user's Hadoop package, which is at:
 
@@ -209,6 +166,20 @@ While you can't `sudo` on TACC to install system packages, there are some other 
     module load python/2.7.1-epd
 
 Oddly, you can't use some of them from your cluster nodes. `module load git` doesn't work, for example. I've built `git` and `tmux` packages and put them in a `~/local` folder with `~/local/bin` on my `PATH`, which is working out well.
+
+---
+
+If you have an iThing and want to be notified when your job starts, you can add an environmental variable to `~/tacc-hadoop/hadoop-conf/hadoop-env.sh` or `~/.bash_profile`:
+
+    export PROWL_API_KEY=215f5a87c6e95c5c43dcc8ca74994ce67c6e95c5
+
+This is used in `jobs/hadoop.template`, which `start` renders to `jobs/hadoop` and then submits to the Longhorn queue manager with `qsub`. So if you want to change the message it sends you, look for the PROWL_API_KEY string in `jobs/hadoop.template` and change the fields sent to `curl` however you like.
+
+To get an API key, [register for a free Prowl account](http://www.prowlapp.com/), log in, then go to the [API tab](https://www.prowlapp.com/api_settings.php) to view / create a new API key. Paste that key into one of the files above, instead of the "215f5a8..." example.
+
+The iPhone app is $2.99. You just install, log in with the same username and password you used for the Prowl website, and then everything *just works*. The notifications have no delay, as far as I can tell.
+
+The job template does allow specifying an `-M me@gmail.com` flag, which presumably emails you when the job starts/aborts/ends, but in my experience, it takes about three days for these emails to get all the way from JJ. Pickle to my computer. Not awfully useful, since the maximum reservation duration on TACC is much shorter than 72 hours.
 
 ---
 
