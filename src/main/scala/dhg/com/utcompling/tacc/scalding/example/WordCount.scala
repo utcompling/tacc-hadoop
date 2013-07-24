@@ -1,6 +1,11 @@
 package com.utcompling.tacc.scalding.example
 
+import com.utcompling.tacc.scalding.ScaldingJob
 import com.twitter.scalding._
+
+object WordCount extends ScaldingJob {
+  def jobClass = classOf[WordCount]
+}
 
 class WordCount(args: Args) extends Job(args) {
   val (inputFile, outputFile) =

@@ -1,14 +1,15 @@
 package com.utcompling.tacc.scoobi.example
 
+import com.utcompling.tacc.scoobi.ScoobiJob
 import com.nicta.scoobi.Scoobi._
 
-object WordCountMaterialize extends ScoobiApp {
-  def run() {
+object WordCountMaterialize extends ScoobiJob {
+  def runJob(args: List[String]) {
 
     val inputFile =
       args.toList match {
         case Seq(inputFile) => inputFile
-        case _ => sys.error("WordCount requires one argument: inputFile")
+        case _ => sys.error("WordCount requires one argument: inputFile.  Found: " + args.mkString(" "))
       }
 
     val counts: DList[(String, Int)] =

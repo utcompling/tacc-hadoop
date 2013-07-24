@@ -1,14 +1,15 @@
 package com.utcompling.tacc.scoobi.example
 
+import com.utcompling.tacc.scoobi.ScoobiJob
 import com.nicta.scoobi.Scoobi._
 
-object WordCount extends ScoobiApp {
-  def run() {
+object WordCount extends ScoobiJob {
+  def runJob(args: List[String]) {
 
     val (inputFile, outputFile) =
-      args.toList match {
+      args match {
         case Seq(inputFile, outputFile) => (inputFile, outputFile)
-        case _ => sys.error("WordCount requires two arguments: inputFile outputFile")
+        case _ => sys.error("WordCount requires two arguments: inputFile outputFile.  Found: " + args.mkString(" "))
       }
 
     val counts: DList[(String, Int)] =
