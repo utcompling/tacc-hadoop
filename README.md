@@ -1,6 +1,14 @@
 # TACC-Hadoop
 
-This will get you started using a Hadoop cluster on [TACC](http://www.tacc.utexas.edu/) with [scoobi](https://github.com/NICTA/scoobi), a Scala wrapper of the Hadoop interface. Using Scoobi is not required, and this repository still has some useful tools even if you're working with Ruby: [Wukong](https://github.com/infochimps/wukong), Python: [Dumbo](https://github.com/klbostee/dumbo), or plain old Java: [Hadoop-MapReduce](https://github.com/apache/hadoop-mapreduce).
+This will get you started using a Hadoop cluster on [TACC](http://www.tacc.utexas.edu/).  This
+project contains numerous scripts that make interacting with the TACC cluster much more managable.
+The source for these scripts can be found [here](https://github.com/utcompling/tacc-hadoop/tree/master/bin).
+
+The project also contains everything necessary to use the [Scoobi](https://github.com/NICTA/scoobi)
+and [Scalding](https://github.com/twitter/scalding) Hadoop wrappers.  However, use of these wrappers 
+is not required, and this repository still has some useful tools even if you're working with Ruby: 
+[Wukong](https://github.com/infochimps/wukong), Python: [Dumbo](https://github.com/klbostee/dumbo), 
+or plain old Java: [Hadoop-MapReduce](https://github.com/apache/hadoop-mapreduce).
 
 ## Setting up the environment
 
@@ -64,9 +72,11 @@ If you have any trouble, or see anything weird in the output, you can stop and r
     stop-cluster.sh
     start-cluster.sh
 
-To shutdown your cluster, use the `stop` command FROM THE LOGIN NODE
+When you are finished work, please always shut down your cluster to free up the nodes for others
+to use.  The `stop` command can be run FROM THE LOGIN NODE to do this (you may need need to `exit`
+the namenode to get back to the login node).
 
-    login1$ stop   # SHORTHAND FOR: qdel NNNNNN
+    stop
 
 
 ## Running jobs
@@ -76,8 +86,8 @@ are Scala-based frameworks that provides a very nice interfaces to Hadoop.  Both
 configured within this project and there are example jobs for each.  Below is a demonstration 
 of how to run Hadoop jobs using examples featuring each of these frameworks.
 
-These instructions make heavy use of a convenient run script for building and running jobs.  If 
-you are curious about the underlying commands, feel free to inspect the script's 
+These instructions make heavy use of a convenient `run` script for building and running jobs.  
+If you are curious about the underlying commands, feel free to inspect the script's 
 [source](https://github.com/utcompling/tacc-hadoop/blob/master/run).
 
 
@@ -107,7 +117,7 @@ example jobs.
 
 And retrieve the results:
 
-    get example.wc     # SHORTHAND FOR: hadoop fs -getmerge example.wc example.wc
+    get example.wc            # SHORTHAND FOR: hadoop fs -getmerge example.wc example.wc
     cat example.wc
     > (a,1)
     > (is,2)
@@ -115,7 +125,7 @@ And retrieve the results:
     > (test,2)
     > (this,2)
 
-There is a second example, [word cound materialize](https://github.com/utcompling/tacc-hadoop/blob/master/src/main/scala/dhg/com/utcompling/tacc/scoobi/example/WordCountMaterialize.scala), 
+There is a second Scoobi example, [word count materialize](https://github.com/utcompling/tacc-hadoop/blob/master/src/main/scala/dhg/com/utcompling/tacc/scoobi/example/WordCountMaterialize.scala), 
 demonstrating the ability to pull the result of a Hadoop job into memory.
 
     run cluster com.utcompling.tacc.scoobi.example.WordCountMaterialize example.txt
@@ -132,11 +142,11 @@ and remote filesystems:
     hadoop fs -rmr example.wc
 
 
-## Running jobs in local mode
+### Running jobs in local mode
 
-Note that use of the keyword `cluster` above directs the script to run distributed on the 
-cluster.  Replacing this with `local` will run the job very quickly in memory, which is 
-useful for testing.
+The `cluster` keyword used above directs the script to run distributed on the cluster.  
+Replacing this with `local` will run the job very quickly in memory, which is useful 
+for testing on small amounts of data.
 
     run compile
     run local com.utcompling.tacc.scoobi.example.WordCount example.txt example.wc
