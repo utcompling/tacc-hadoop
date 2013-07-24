@@ -175,9 +175,8 @@ scala collections.  This is a very fast way to test your job that doesn't requir
 you to actually change the code.  It works on any way that you run your job:
 
     cd $TACC_HADOOP
-    ./sbt "run-main dhg.tacc.WordCountMaterialize example.txt -- scoobi inmemory"
-    run local dhg.tacc.WordCountMaterialize example.txt -- scoobi inmemory
-    run cluster dhg.tacc.WordCountMaterialize example.txt -- scoobi inmemory
+    run local com.utcompling.tacc.scoobi.WordCountMaterialize example.txt -- scoobi inmemory
+    run cluster com.utcompling.tacc.scoobi.WordCountMaterialize example.txt -- scoobi inmemory
 
 ---
 
@@ -192,6 +191,7 @@ You can use your own Hadoop, for example, the newer `hadoop-0.20.2-cdh3u5`, whic
     wget http://archive.cloudera.com/cdh/3/hadoop-0.20.2-cdh3u5.tar.gz
     tar xzf hadoop-0.20.2-cdh3u5.tar.gz
     ln -s hadoop-0.20.2-cdh3u5 hadoop
+
 
 ## Miscellaneous cluster stuff
 
