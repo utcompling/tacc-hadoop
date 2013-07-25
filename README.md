@@ -108,12 +108,17 @@ Create some data and put it into the Hadoop filesystem
     echo "this is a test . this test is short ." > example.txt
     put example.txt
 
-Run the [Scoobi word count](https://github.com/utcompling/tacc-hadoop/blob/master/src/main/scala/dhg/com/utcompling/tacc/scoobi/example/WordCount.scala) 
-or [Scalding word count](https://github.com/utcompling/tacc-hadoop/blob/master/src/main/scala/dhg/com/utcompling/tacc/scalding/example/WordCount.scala) 
-example jobs.  
+Run the [Scoobi word count](https://github.com/utcompling/tacc-hadoop/blob/master/src/main/scala/dhg/com/utcompling/tacc/scoobi/example/WordCount.scala), 
+[Scalding word count](https://github.com/utcompling/tacc-hadoop/blob/master/src/main/scala/dhg/com/utcompling/tacc/scalding/example/WordCount.scala),
+or [Scalding word count fields](https://github.com/utcompling/tacc-hadoop/blob/master/src/main/scala/dhg/com/utcompling/tacc/scalding/example/WordCountFields.scala) 
+example jobs.  There are two Scalding example jobs because Scalding has two different APIs: the 
+[Type Safe](https://github.com/twitter/scalding/wiki/Type-safe-api-reference) API, which looks
+like normal Scala (similar to Scoobi), and the original [Fields](https://github.com/twitter/scalding/wiki/Fields-based-API-Reference) 
+API.
 
     run cluster com.utcompling.tacc.scoobi.example.WordCount example.txt example.wc
     run cluster com.utcompling.tacc.scalding.example.WordCount example.txt example.wc
+    run cluster com.utcompling.tacc.scalding.example.WordCountFields example.txt example.wc
 
 And retrieve the results:
 
@@ -152,6 +157,7 @@ for testing on small amounts of data.
     run local com.utcompling.tacc.scoobi.example.WordCount example.txt example.wc
     run local com.utcompling.tacc.scalding.example.WordCount example.txt example.wc
     run local com.utcompling.tacc.scoobi.example.WordCountMaterialize example.txt
+    run local com.utcompling.tacc.scalding.example.WordCountFields example.txt example.wc
 
 
 ## Other useful stuff

@@ -14,8 +14,10 @@ class WordCount(args: Args) extends Job(args) {
       case _ => sys.error("WordCount requires two positional arguments: inputFile outputFile.  Found: " + args.m)
     }
 
-  TextLine(inputFile)
-    .flatMap('line -> 'word) { line: String => line.split("\\W+") }
-    .groupBy('word) { group => group.size }
-    .write(Tsv(outputFile))
+  TypedPipe.from(TextLine(inputFile))
+    .flatMap(_.toLowerCase.split("\\W+"))
+    .map(word => (word, 1))
+    .group  // sample as .groupBy{ case (word, count) => word }
+    .reduce(_ + _)  // same as .reduce((a: Int, b: Int) => a + b)
+    .write(TypedTsv[(String, Int)](outputFile))
 }
