@@ -4,7 +4,7 @@ import com.utcompling.tacc.scoobi.ScoobiJob
 import com.nicta.scoobi.Scoobi._
 
 object WordCount extends ScoobiJob {
-  def runJob(args: List[String]) {
+  def run() {
 
     val (inputFile, outputFile) =
       args match {

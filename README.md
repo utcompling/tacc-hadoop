@@ -113,7 +113,7 @@ or [Scalding word count](https://github.com/utcompling/tacc-hadoop/blob/master/s
 example jobs.  
 
     run cluster com.utcompling.tacc.scoobi.example.WordCount example.txt example.wc
-    run cluster com.utcompling.tacc.scalding.example.WordCount --args example.txt example.wc
+    run cluster com.utcompling.tacc.scalding.example.WordCount example.txt example.wc
 
 And retrieve the results:
 
@@ -150,7 +150,7 @@ for testing on small amounts of data.
 
     run compile
     run local com.utcompling.tacc.scoobi.example.WordCount example.txt example.wc
-    run local com.utcompling.tacc.scalding.example.WordCount --args example.txt example.wc
+    run local com.utcompling.tacc.scalding.example.WordCount example.txt example.wc
     run local com.utcompling.tacc.scoobi.example.WordCountMaterialize example.txt
 
 
@@ -194,3 +194,27 @@ The job template does allow specifying an `-M me@gmail.com` flag, which presumab
 ---
 
 Some UT graduate students have compiled a useful collection of TACC-related notes, geared towards Windows users who prefer Java and graphical user interfaces. https://sites.google.com/site/tacchadoop/
+
+
+## Test Commands to verify that the examples are working:
+
+    run compile
+
+    rm -rf example.wc; run local com.utcompling.tacc.scoobi.example.WordCount example.txt example.wc
+    cat example.wc/ch*-r-*
+
+    rm -rf example.wc; run local com.utcompling.tacc.scalding.example.WordCount example.txt example.wc
+    cat example.wc
+
+    run local com.utcompling.tacc.scoobi.example.WordCountMaterialize example.txt
+
+    run jar
+
+    hdfs -rmr example.wc; run cluster com.utcompling.tacc.scoobi.example.WordCount example.txt example.wc
+    rm -rf example.wc; get example.wc; cat example.wc
+
+    hdfs -rmr example.wc; run cluster com.utcompling.tacc.scalding.example.WordCount example.txt example.wc
+    rm -rf example.wc; get example.wc; cat example.wc
+
+    run cluster com.utcompling.tacc.scoobi.example.WordCountMaterialize example.txt
+

@@ -11,11 +11,4 @@ trait ScoobiJob extends ScoobiApp {
       super.main(args)
     }
   }
-
-  final def run() {
-    runJob(args.toList)
-  }
-
-  def runJob(args: List[String])
-
 }

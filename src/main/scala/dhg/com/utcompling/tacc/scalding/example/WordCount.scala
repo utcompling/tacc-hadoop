@@ -9,13 +9,13 @@ object WordCount extends ScaldingJob {
 
 class WordCount(args: Args) extends Job(args) {
   val (inputFile, outputFile) =
-    args.list("args") match {
+    args.positional match {
       case Seq(inputFile, outputFile) => (inputFile, outputFile)
       case _ => sys.error("WordCount requires two arguments: inputFile outputFile")
     }
 
   TextLine(inputFile)
-    .flatMap('line -> 'word) { line: String => line.split("\\s+") }
+    .flatMap('line -> 'word) { line: String => line.split("\\W+") }
     .groupBy('word) { group => group.size }
     .write(Tsv(outputFile))
 }
