@@ -156,8 +156,8 @@ for testing on small amounts of data.
     run compile
     run local com.utcompling.tacc.scoobi.example.WordCount example.txt example.wc
     run local com.utcompling.tacc.scalding.example.WordCount example.txt example.wc
-    run local com.utcompling.tacc.scoobi.example.WordCountMaterialize example.txt
     run local com.utcompling.tacc.scalding.example.WordCountFields example.txt example.wc
+    run local com.utcompling.tacc.scoobi.example.WordCountMaterialize example.txt
 
 
 ## Other useful stuff

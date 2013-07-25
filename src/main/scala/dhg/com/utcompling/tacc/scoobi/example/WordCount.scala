@@ -16,7 +16,7 @@ object WordCount extends ScoobiJob {
       fromTextFile(inputFile)
         .flatMap(_.toLowerCase.split("\\W+"))
         .map(word => (word, 1))
-        .groupByKey  // same as .groupBy{ case (word, count) => word }
+        .groupByKey  // same as .groupBy{ case (word, count) => word }.map{ case (word, wordCountPairs) => (word, wordCountPairs.map(_._2)) }
         .combine(_ + _)  // same as .combine((a: Int, b: Int) => a + b)
 
     persist(toTextFile(counts, outputFile))

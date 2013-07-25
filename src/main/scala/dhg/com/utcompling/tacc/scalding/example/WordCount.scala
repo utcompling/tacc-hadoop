@@ -17,7 +17,7 @@ class WordCount(args: Args) extends Job(args) {
   TypedPipe.from(TextLine(inputFile))
     .flatMap(_.toLowerCase.split("\\W+"))
     .map(word => (word, 1))
-    .group  // sample as .groupBy{ case (word, count) => word }
+    .group  // group by key, same as .groupBy{ case (word, count) => word }.mapValues{ case (word, counts) => counts }
     .reduce(_ + _)  // same as .reduce((a: Int, b: Int) => a + b)
     .write(TypedTsv[(String, Int)](outputFile))
 }
