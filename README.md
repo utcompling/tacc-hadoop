@@ -73,8 +73,8 @@ If you have any trouble, or see anything weird in the output, you can stop and r
     start-cluster.sh
 
 When you are finished work, please always shut down your cluster to free up the nodes for others
-to use.  The `stop` command can be run FROM THE LOGIN NODE to do this (you may need need to `exit`
-the namenode to get back to the login node).
+to use.  The `stop` command can be run *FROM THE LOGIN NODE* to do this (you may need need to 
+`exit` the namenode to get back to the login node).
 
     stop
 
@@ -196,7 +196,7 @@ The job template does allow specifying an `-M me@gmail.com` flag, which presumab
 Some UT graduate students have compiled a useful collection of TACC-related notes, geared towards Windows users who prefer Java and graphical user interfaces. https://sites.google.com/site/tacchadoop/
 
 
-## Test Commands to verify that the examples are working:
+## Test Commands to verify examples are working:
 
     run compile
 
