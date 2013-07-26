@@ -1,5 +1,8 @@
-export JAVA_HOME=/share/apps/teragrid/jdk64/jdk1.7.0_11/
 export TACC_HADOOP=$HOME/tacc-hadoop
+export TACC_PROJECT_HOME=$TACC_HADOOP
+
+
+export JAVA_HOME=/share/apps/teragrid/jdk64/jdk1.7.0_11/
 export HADOOP_HOME=$TACC_HADOOP/hadoop
 export HADOOP_CONF_DIR=$TACC_HADOOP/hadoop-conf
 export HADOOP_LOG_DIR=$SCRATCH/logs

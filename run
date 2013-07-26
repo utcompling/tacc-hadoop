@@ -1,4 +1,4 @@
-START="$TACC_HADOOP/target/start"
+START="$PROJECT_HOME/target/start"
 
 
 #######
@@ -15,8 +15,8 @@ if [[ -z "$COMPILE_CMD" && -z "$RUN_CMD" ]]; then echo "$USAGE" >&2; exit 1; fi
 # Do stuff
 
 case "$COMPILE_CMD" in
-  compile) $TACC_HADOOP/sbt add-start-script-tasks start-script;;
-  jar)     $TACC_HADOOP/sbt assembly;;
+  compile) sbt add-start-script-tasks start-script;;
+  jar)     sbt assembly;;
 esac
 
 case "$RUN_CMD" in
